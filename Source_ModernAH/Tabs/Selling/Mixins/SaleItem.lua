@@ -96,7 +96,7 @@ function AuctionatorSaleItemMixin:OnHide()
     Auctionator.Selling.Events.ClearBagItem,
     Auctionator.Selling.Events.RequestPost,
     Auctionator.Selling.Events.ConfirmPost,
-    Auctionator.Selling.Events.SkipPost,
+    Auctionator.Selling.Events.SkipItem,
     Auctionator.AH.Events.ThrottleUpdate,
     Auctionator.Selling.Events.PriceSelected,
     Auctionator.Selling.Events.RefreshSearch,
