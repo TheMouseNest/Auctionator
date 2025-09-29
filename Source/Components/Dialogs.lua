@@ -113,7 +113,7 @@ function Auctionator.Dialogs.ShowConfirmAlt(text, yesText, altText, noText, conf
 
     dialog.altButton:SetPoint("TOP", dialog, "CENTER", 0, -10)
     dialog.acceptButton:SetPoint("RIGHT", dialog.altButton, "LEFT", -10, 0)
-    dialog.cancelButton:SetPoint("LEFT", dialog.altButton, "RIGHT", -10, 0)
+    dialog.cancelButton:SetPoint("LEFT", dialog.altButton, "RIGHT", 10, 0)
     dialog.cancelButton:SetScript("OnClick", function()
       dialog:Hide()
     end)
