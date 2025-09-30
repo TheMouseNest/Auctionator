@@ -144,15 +144,28 @@ local function CraftCostString()
 end
 
 local function ProfitString(profit)
-  local price
-  if profit >= 0 then
-    price = WHITE_FONT_COLOR:WrapTextInColorCode(GetMoneyString(profit, true))
-  else
-    price = RED_FONT_COLOR:WrapTextInColorCode("-" .. GetMoneyString(-profit, true))
+  local toCraft = GetSkillReagentsTotal()
+  
+  local percentageValue = 0
+  if toCraft > 0 then
+    percentageValue = math.floor((profit / toCraft) * 100 * 100 + 0.5) / 100
   end
-
-  return AUCTIONATOR_L_PROFIT_COLON .. " " .. price
-
+  
+  local priceText
+  if profit >= 0 then
+    priceText = WHITE_FONT_COLOR:WrapTextInColorCode(GetMoneyString(profit, true))
+  else
+    priceText = RED_FONT_COLOR:WrapTextInColorCode("-" .. GetMoneyString(-profit, true))
+  end
+  
+  local percentageText
+  if percentageValue >= 0 then
+    percentageText = WHITE_FONT_COLOR:WrapTextInColorCode(percentageValue .. "%")
+  else
+    percentageText = RED_FONT_COLOR:WrapTextInColorCode(percentageValue .. "%")
+  end
+  
+  return AUCTIONATOR_L_PROFIT_COLON .. " " .. priceText .. " (" .. percentageText .. ")"
 end
 
 function Auctionator.CraftingInfo.GetInfoText()
