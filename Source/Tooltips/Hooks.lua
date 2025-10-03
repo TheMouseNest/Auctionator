@@ -28,6 +28,13 @@ TooltipHandlers["SetBuybackItem"] = function(tip, slotIndex)
   Auctionator.Tooltip.ShowTipWithPricing(tip, itemLink, itemCount)
 end
 
+local GetMerchantItemInfo = GetMerchantItemInfo or function(index)
+  local info = C_MerchantFrame.GetItemInfo(index);
+  if info then
+    return info.name, info.texture, info.price, info.stackCount, info.numAvailable, info.isPurchasable, info.isUsable, info.hasExtendedCost, info.currencyID, info.spellID;
+  end
+end
+
 -- This is called when mousing over an item in a merchant window (Merchant Pane)
 TooltipHandlers["SetMerchantItem"] = function(tip, index)
   local itemLink = GetMerchantItemLink(index)

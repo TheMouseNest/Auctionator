@@ -1,3 +1,9 @@
+local GetMerchantItemInfo = GetMerchantItemInfo or function(index)
+  local info = C_MerchantFrame.GetItemInfo(index);
+  if info then
+    return info.name, info.texture, info.price, info.stackCount, info.numAvailable, info.isPurchasable, info.isUsable, info.hasExtendedCost, info.currencyID, info.spellID;
+  end
+end
 function Auctionator.CraftingInfo.CacheVendorPrices()
   for i = 1, GetMerchantNumItems() do
     local itemID = GetMerchantItemID(i)
