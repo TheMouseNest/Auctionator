@@ -18,9 +18,7 @@ end
 
 function AuctionatorBuyingItemTooltipMixin:OnMouseUp()
   if IsModifiedClick("CHATLINK") then
-    if self.itemLink ~= nil then
-      ChatEdit_InsertLink(self.itemLink)
-    end
+    Auctionator.Utilities.InsertLink(self.itemLink)
   else
     if self.itemLink ~= nil then
       -- Search for item in the browse tab (so that someone can check the bid

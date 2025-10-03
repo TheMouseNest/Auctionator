@@ -23,6 +23,7 @@
   <Script file="PriceWarningThreshold.lua"/>
   <Script file="IsVendorable.lua"/>
   <Script file="IsBound.lua"/>
+  <Script file="InsertLink.lua"/>
 
   <Script file="VerifyListTypes.lua"/>
   <Script file="ValidatePercentage.lua"/>
