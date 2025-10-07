@@ -1,5 +1,5 @@
-## Interface-Mainline: 110200
-## Interface-Mists: 50500, 50501
+## Interface-Mainline: 110200, 110205
+## Interface-Mists: 50501
 ## Title: Auctionator
 ## Version: @project-version@
 ## Author: Borjamacare, plusmouse
