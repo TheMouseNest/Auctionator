@@ -75,22 +75,24 @@ local function GenerateSubClasses( classID, parentKey )
     local subClassID = subClassesTable[ index ]
     local name = C_Item.GetItemSubClassInfo( classID, subClassID )
 
-    local category = { classID = classID, subClassID = subClassID }
-    local subClass = Auctionator.Search.OldCategory:new({
-      classID = subClassID,
-      name = name,
-      key = parentKey .. [[/]] .. name,
-      parentKey = parentKey,
-      category = { category }
-    })
+    if name then
+      local category = { classID = classID, subClassID = subClassID }
+      local subClass = Auctionator.Search.OldCategory:new({
+        classID = subClassID,
+        name = name,
+        key = parentKey .. [[/]] .. name,
+        parentKey = parentKey,
+        category = { category }
+      })
 
-    table.insert( subClasses, subClass )
+      table.insert( subClasses, subClass )
 
-    --Armor special case, adds inventory slot categories
-    if classID == Enum.ItemClass.Armor then
-      local inventorySlots = GenerateArmorInventorySlots(subClass.key, category)
-      for _, slot in ipairs(inventorySlots) do
-        table.insert(subClasses, slot)
+      --Armor special case, adds inventory slot categories
+      if classID == Enum.ItemClass.Armor then
+        local inventorySlots = GenerateArmorInventorySlots(subClass.key, category)
+        for _, slot in ipairs(inventorySlots) do
+          table.insert(subClasses, slot)
+        end
       end
     end
   end
