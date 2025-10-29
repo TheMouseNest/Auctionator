@@ -1,21 +1,17 @@
-local possibleChargePatterns = {
-  ITEM_SPELL_CHARGES_NONE,
-}
-
+local possibleChargePatterns
 do
-  local replacedNumInsertPoint = ITEM_SPELL_CHARGES:gsub("%%d", "%%d%+")
+  possibleChargePatterns = {
+    "^" .. ITEM_SPELL_CHARGES_NONE .. "$",
+  }
 
-  local anyEscapes = ITEM_SPELL_CHARGES:match("|4([^;]*);")
-  if anyEscapes then
-    for _, part in ipairs({ strsplit(":", anyEscapes) }) do
-      table.insert(possibleChargePatterns, (replacedNumInsertPoint:gsub("|4[^;]*;", part)))
+  local escapeSequence = ITEM_SPELL_CHARGES:match("|4([^;]*);")
+
+  if escapeSequence then
+    for _, part in ipairs({ strsplit(":", escapeSequence) }) do
+      table.insert(possibleChargePatterns, "^" .. (ITEM_SPELL_CHARGES:gsub("%%d", "%%d%+"):gsub("|4[^;]*;", part)) .. "$")
     end
   else
-    table.insert(possibleChargePatterns, replacedNumInsertPoint)
-  end
-
-  for index, pat in ipairs(possibleChargePatterns) do
-    possibleChargePatterns[index] = "^" .. pat .. "$"
+    table.insert(possibleChargePatterns, "^" .. ITEM_SPELL_CHARGES .. "$")
   end
 end
 
