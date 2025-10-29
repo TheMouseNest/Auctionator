@@ -13,4 +13,3 @@ plain-copy:
   - *Vanilla
   - *ModernAH
   - *LegacyAH
-enable-toc-creation: yes

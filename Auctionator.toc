@@ -1,8 +1,7 @@
-## Interface-Mainline: 110200, 110205
-## Interface-Mists: 50501
+## Interface: 110205, 50502, 11508
 ## Title: Auctionator
 ## Version: @project-version@
-## Author: Borjamacare, plusmouse
+## Author: plusmouse, Borjamacare
 ## X-Website: https://www.curseforge.com/wow/addons/auctionator
 ## X-Category: Auction/Economy
 ## X-Localizations: enUS, itIT, deDE, ruRU, koKR, frFR, esES, esMX, zhTW, ptBR, zhCN
@@ -27,14 +26,23 @@
 ## IconTexture: Interface\AddOns\Auctionator\Images\Logo
 
 Libs\Manifest.xml
-Libs_ModernAH\Manifest.xml
+Libs_ModernAH\Manifest.xml [AllowLoadGameType tbc, wrath, cata, mists, mainline]
+
+Patches\TaintLess.xml [AllowLoadGameType vanilla]
 
 Locales\Manifest.xml
 
-Imports_ModernAH\Manifest.xml
-Assets_ModernAH.xml
+Imports_ModernAH\Manifest.xml [AllowLoadGameType tbc, wrath, cata, mists, mainline]
+Assets_ModernAH.xml [AllowLoadGameType tbc, wrath, cata, mists, mainline]
+
+Assets_LegacyAH.xml [AllowLoadGameType vanilla]
+Imports_LegacyAH\Manifest.xml [AllowLoadGameType vanilla]
 
 Source\Manifest.xml
 Source_Mainline\Manifest.xml [AllowLoadGameType mainline]
 Source_Classic\Manifest.xml [AllowLoadGameType classic]
-Source_ModernAH\Manifest.xml
+Source_ModernAH\Manifest.xml [AllowLoadGameType tbc, wrath, cata, mists, mainline]
+
+Source_Vanilla\Manifest.xml [AllowLoadGameType vanilla]
+Data_Vanilla\Suffixes.lua [AllowLoadGameType vanilla]
+Source_LegacyAH\Manifest.xml [AllowLoadGameType vanilla]
