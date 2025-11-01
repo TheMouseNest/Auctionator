@@ -222,22 +222,25 @@ function AuctionatorBagCacheMixin:DoBagRefresh()
 
         -- Load item data to determine whether it can be auctioned, its quality,
         -- item level, etc.
-        if not Auctionator.Groups.Constants.IsRetail then
+        if Auctionator.Groups.Constants.IsVanilla then
           local classID = select(6, C_Item.GetItemInfoInstant(slotInfo.itemID))
           local _, spellID = C_Item.GetItemSpell(slotInfo.itemID)
           -- Classic: Special case to load spell data for item charge info for
           -- auctionable check
           if classID == Enum.ItemClass.Consumable and spellID then
-            C_Spell.RequestLoadSpellData(spellID)
-            local spell = Spell:CreateFromSpellID(spellID)
-            self.loaders[li] = spell:ContinueWithCancelOnSpellLoad(function()
-              if C_Item.IsItemDataCached(location) then
+            local function LocalFinish()
+              if not C_Item.IsItemDataCached(location) then
+                local item = Item:CreateFromItemID(slotInfo.itemID)
+                self.loaders[li] = item:ContinueWithCancelOnItemLoad(FinishSlot)
+              elseif not C_Spell.IsSpellDataCached(spellID) then
+                local spell = Spell:CreateFromSpellID(spellID)
+                self.loaders[li] = spell:ContinueWithCancelOnSpellLoad(LocalFinish)
+              else
                 self.loaders[li] = nil
                 FinishSlot()
-              else
-                self.loaders[li] = item:ContinueWithCancelOnItemLoad(FinishSlot)
               end
-            end)
+            end
+            LocalFinish()
           elseif C_Item.IsItemDataCached(location) then
             FinishSlot()
           else
