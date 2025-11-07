@@ -85,7 +85,7 @@ function AuctionatorGroupsViewItemMixin:OnClick(button)
       (DressUpLink or DressUpItemLink)(self.itemInfo.itemLink)
 
     elseif IsModifiedClick("CHATLINK") then
-      ChatEdit_InsertLink(self.itemInfo.itemLink)
+      addonTable.Utilities.InsertLink(self.itemInfo.itemLink)
 
     else
       Auctionator.Groups.CallbackRegistry:TriggerEvent(self.clickEventName, self, button)

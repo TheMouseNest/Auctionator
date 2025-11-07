@@ -19,7 +19,7 @@ end
 function AuctionatorBuyingItemTooltipMixin:OnMouseUp()
   if IsModifiedClick("CHATLINK") then
     if self.itemLink ~= nil then
-      ChatEdit_InsertLink(self.itemLink)
+      Auctionator.Utilities.InsertLink(self.itemLink)
     end
   else
     if self.itemLink ~= nil then

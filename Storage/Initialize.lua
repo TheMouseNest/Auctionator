@@ -91,8 +91,6 @@ function addonTable.Storage.InitializeDatabase()
     }
   end
 
-  local LibCBOR = LibStub("LibCBOR-1.0")
-
   if AUCTIONATOR_PRICE_DATABASE["__dbversion"] == VERSION_8_3 then
     AUCTIONATOR_PRICE_DATABASE["__dbversion"] = VERSION_SERIALIZED
   end
@@ -131,11 +129,7 @@ function addonTable.Storage.InitializeDatabase()
     for key, data in pairs(AUCTIONATOR_PRICE_DATABASE) do
       -- Convert one realm at a time, no need to hold up a login indefinitely
       if key ~= "__dbversion" and key ~= realm and type(data) == "table" then
-        if C_EncodingUtil then
-          AUCTIONATOR_PRICE_DATABASE[key] = C_EncodingUtil.SerializeCBOR(data)
-        else
-          AUCTIONATOR_PRICE_DATABASE[key] = LibCBOR:Serialize(data)
-        end
+        AUCTIONATOR_PRICE_DATABASE[key] = C_EncodingUtil.SerializeCBOR(data)
         break
       end
     end
@@ -149,12 +143,7 @@ function addonTable.Storage.InitializeDatabase()
   -- version of Auctionator
   local raw = AUCTIONATOR_PRICE_DATABASE[realm]
   if type(raw) == "string" then
-    local success, data
-    if C_EncodingUtil then
-      success, data = pcall(C_EncodingUtil.DeserializeCBOR, raw)
-    else
-      success, data = pcall(LibCBOR.Deserialize, LibCBOR, raw)
-    end
+    local success, data = pcall(C_EncodingUtil.DeserializeCBOR, raw)
     if not success then
       AUCTIONATOR_PRICE_DATABASE[realm] = {}
     else
@@ -186,11 +175,7 @@ function addonTable.Storage.InitializeDatabase()
         end
         -- Reverse per-item CBOR format
         if type(itemData) == "string" then
-          if C_EncodingUtil then
-            realmData[key] = C_EncodingUtil.DeserializeCBOR(itemData)
-          else
-            realmData[key] = LibCBOR:Deserialize(itemData)
-          end
+          realmData[key] = C_EncodingUtil.DeserializeCBOR(itemData)
         end
       end
       realmData.version = 2

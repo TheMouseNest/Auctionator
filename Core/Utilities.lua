@@ -122,3 +122,15 @@ end
 function addonTable.Utilities.IsEquipment(classID)
   return classID and (classID == Enum.ItemClass.Weapon or classID == Enum.ItemClass.Armor or classID == Enum.ItemClass.Profession)
 end
+
+function addonTable.Utilities.InsertLink(link)
+  if link ~= nil then
+    if ChatFrameUtil and ChatFrameUtil.InsertLink then
+      if not C_ChatInfo.InChatMessagingLockdown or not C_ChatInfo.InChatMessagingLockdown() then
+        ChatFrameUtil.InsertLink(link)
+      end
+    else
+      ChatEdit_InsertLink(link)
+    end
+  end
+end

@@ -36,7 +36,7 @@ function AuctionatorBuyItemRowMixin:OnClick(button, ...)
     DressUpLink(self.rowData.itemLink);
 
   elseif IsModifiedClick("CHATLINK") then
-    ChatEdit_InsertLink(self.rowData.itemLink)
+    Auctionator.Utilities.InsertLink(self.rowData.itemLink)
 
   elseif self.rowData.canBuy then
     Auctionator.EventBus

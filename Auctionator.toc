@@ -1,4 +1,4 @@
-## Interface: 110200, 110107, 50500
+## Interface: 120000, 110205, 50500, 11508
 ## Title: Auctionator
 ## Version: @project-version@
 ## Author: plusmouse, borjamacare
@@ -25,7 +25,6 @@
 ## IconTexture: Interface\AddOns\Auctionator\Assets\logo
 
 Libs/LibStub/LibStub.lua
-Libs/LibCBOR/LibCBOR.lua
 
 Locales.lua
 

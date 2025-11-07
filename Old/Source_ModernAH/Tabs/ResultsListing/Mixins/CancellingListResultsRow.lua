@@ -7,7 +7,7 @@ function AuctionatorCancellingListResultsRowMixin:OnClick(button, ...)
     DressUpLink(self.rowData.itemLink);
 
   elseif IsModifiedClick("CHATLINK") then
-    ChatEdit_InsertLink(self.rowData.itemLink)
+    Auctionator.Utilities.InsertLink(self.rowData.itemLink)
 
   elseif button == "LeftButton" then
     Auctionator.EventBus
