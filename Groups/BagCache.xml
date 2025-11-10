@@ -1,8 +1,0 @@
-<Ui>
-  <Frame name="AuctionatorBagCacheTemplate" virtual="true"  mixin="AuctionatorBagCacheMixin">
-    <Scripts>
-      <OnLoad method="OnLoad"/>
-      <OnEvent method="OnEvent"/>
-    </Scripts>
-  </Frame>
-</Ui>
