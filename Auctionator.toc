@@ -1,14 +1,11 @@
-## Interface: 120000, 110205, 50500, 11508
+## Interface: 120000, 110207, 110205, 50502, 11508
 ## Title: Auctionator
 ## Version: @project-version@
 ## Author: plusmouse, borjamacare
 ## X-Website: https://www.curseforge.com/wow/addons/auctionator
 ## X-Category: Auction/Economy
 ## X-Localizations: enUS, itIT, deDE, ruRU, koKR, frFR, esES, esMX, zhTW, ptBR, zhCN
-## Notes: A lightweight addon that makes it easy and fast to buy, sell and manage auctions
-## Notes-esES: Un addon liviano que hace que comprar, vender y administrar subastas sea fácil y rápido
-## Notes-esMX: Un addon liviano que hace que comprar, vender y administrar subastas sea fácil y rápido
-## Notes-zhCN: 一款轻量级拍卖行插件，让购买、出售和管理拍卖等物品变得简单快捷
+## Notes: Makes it easier to use the auction house and track the value of items
 ## Category-enUS: Auctions
 ## Category-deDE: Auktionen
 ## Category-esES: Subastas
@@ -37,7 +34,7 @@ Core/Config.lua
 Core/Initialize.lua
 Core/SlashCmd.lua
 
-Data/Legacy/Suffixes.lua
+Data/Legacy/Suffixes.lua [AllowLoadGameType vanilla]
 
 Skins/Main.lua
 Skins/Blizzard.lua
@@ -58,12 +55,18 @@ CustomiseDialog/Components.lua
 CustomiseDialog/Initialize.lua
 
 Wrappers/Queue.lua
+
 Wrappers/Modern/ItemKeyLoader.lua
 Wrappers/Modern/SearchScan.lua
 Wrappers/Modern/Throttling.lua
 Wrappers/Modern/Wrappers.lua
 Wrappers/Modern/Initialize.lua
+
+Wrappers/Legacy/Wrappers.lua
+Wrappers/Legacy/Scan.lua
+Wrappers/Legacy/Throttling.lua
 Wrappers/Legacy/Initialize.lua
+
 Wrappers/Initialize.lua
 
 API/Main.lua

@@ -134,3 +134,24 @@ function addonTable.Utilities.InsertLink(link)
     end
   end
 end
+
+function addonTable.Utilities.GetCleanItemLink(itemLink)
+  if not itemLink then
+    return ""
+  end
+
+  local _, pre, hyperlink, post = ExtractHyperlinkString(itemLink)
+
+  local parts = { strsplit(":", hyperlink) }
+
+  for index = 3, 7 do
+    parts[index] = ""
+  end
+
+  local wantedBits = {}
+  for i = 1, 8 do
+    table.insert(wantedBits, parts[i])
+  end
+
+  return table.concat(wantedBits, ":")
+end

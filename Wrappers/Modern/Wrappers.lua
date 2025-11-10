@@ -6,7 +6,7 @@ function addonTable.Wrappers.Modern.SendSearchQueryByGenerator(itemKeyGenerator,
     C_AuctionHouse.SendSearchQuery(itemKey, sorts, splitOwnedItems)
   end
 
-  addonTable.Wrappers.Modern.Internals.searchScan:SetSearch(itemKeyGenerator, rawSearch)
+  addonTable.Wrappers.Internals.searchScan:SetSearch(itemKeyGenerator, rawSearch)
 end
 
 function addonTable.Wrappers.Modern.SendSearchQueryByItemKey(itemKey, sorts, splitOwnedItems)
@@ -17,7 +17,7 @@ function addonTable.Wrappers.Modern.SendSearchQueryByItemKey(itemKey, sorts, spl
     C_AuctionHouse.SendSearchQuery(itemKey, sorts, splitOwnedItems)
   end
 
-  addonTable.Wrappers.Modern.Internals.searchScan:SetSearch(itemKeyGenerator, rawSearch)
+  addonTable.Wrappers.Internals.searchScan:SetSearch(itemKeyGenerator, rawSearch)
 end
 
 function addonTable.Wrappers.Modern.SendSellSearchQueryByGenerator(itemKeyGenerator, sorts, splitOwnedItems)
@@ -25,7 +25,7 @@ function addonTable.Wrappers.Modern.SendSellSearchQueryByGenerator(itemKeyGenera
     C_AuctionHouse.SendSellSearchQuery(itemKey, sorts, splitOwnedItems)
   end
 
-  addonTable.Wrappers.Modern.Internals.searchScan:SetSearch(itemKeyGenerator, rawSearch)
+  addonTable.Wrappers.Internals.searchScan:SetSearch(itemKeyGenerator, rawSearch)
 end
 
 function addonTable.Wrappers.Modern.SendSellSearchQueryByItemKey(itemKey, sorts, splitOwnedItems)
@@ -36,7 +36,7 @@ function addonTable.Wrappers.Modern.SendSellSearchQueryByItemKey(itemKey, sorts,
     C_AuctionHouse.SendSellSearchQuery(itemKey, sorts, splitOwnedItems)
   end
 
-  addonTable.Wrappers.Modern.Internals.searchScan:SetSearch(itemKeyGenerator, rawSearch)
+  addonTable.Wrappers.Internals.searchScan:SetSearch(itemKeyGenerator, rawSearch)
 end
 
 function addonTable.Wrappers.Modern.QueryOwnedAuctions(...)
@@ -69,7 +69,7 @@ end
 
 -- Event ThrottleUpdate will fire whenever the state changes
 function addonTable.Wrappers.Modern.IsNotThrottled()
-  return addonTable.Wrappers.Modern.Internals.throttling:IsReady()
+  return addonTable.Wrappers.Internals.throttling:IsReady()
 end
 
 function addonTable.Wrappers.Modern.CancelAuction(...)
@@ -82,7 +82,7 @@ function addonTable.Wrappers.Modern.ReplicateItems()
 end
 
 function addonTable.Wrappers.Modern.GetItemKeyInfo(itemKey, callback)
-  addonTable.Wrappers.Modern.Internals.itemKeyLoader:Get(itemKey, callback)
+  addonTable.Wrappers.Internals.itemKeyLoader:Get(itemKey, callback)
 end
 
 function addonTable.Wrappers.Modern.GetAuctionItemSubClasses(classID)

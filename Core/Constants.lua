@@ -1,3 +1,4 @@
+---@class addonTableAuctionator
 local _, addonTable = ...
 
 addonTable.Constants = {
@@ -160,6 +161,13 @@ addonTable.Constants.Events = {
 
   "ThrottleReady",
   "ThrottleUpdate",
+
+  "CurrentThrottleTimeout", -- Legacy
+  "ThrottleAbort", -- Legacy
+  "ScanPageStart", -- Legacy
+  "ScanResultsUpdate", -- Legacy
+  "ScanPageReady", -- Legacy
+  "ScanAborted", -- Legacy
 
   "WrappedCommodityResultsReady", -- Modern
   "WrappedItemResultsReady", -- Modern
