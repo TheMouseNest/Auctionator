@@ -31,7 +31,7 @@ local BID_PLACED_EVENTS = {
 local TIMEOUT = 10
 
 function addonTable.Wrappers.Legacy.ThrottlingMixin:OnLoad()
-  self:SetScript"OnEvent", self.OnEvent)
+  self:SetScript("OnEvent", self.OnEvent)
 
   FrameUtil.RegisterFrameForEvents(self, THROTTLING_EVENTS)
 
