@@ -26,23 +26,23 @@
 ## IconTexture: Interface\AddOns\Auctionator\Images\Logo
 
 Libs\Manifest.xml
-Libs_ModernAH\Manifest.xml [AllowLoadGameType tbc, wrath, cata, mists, mainline]
+Libs_ModernAH\Manifest.xml [AllowLoadGameType wrath, cata, mists, mainline]
 
-Patches\TaintLess.xml [AllowLoadGameType vanilla]
+Patches\TaintLess.xml [AllowLoadGameType vanilla, tbc]
 
 Locales\Manifest.xml
 
-Imports_ModernAH\Manifest.xml [AllowLoadGameType tbc, wrath, cata, mists, mainline]
-Assets_ModernAH.xml [AllowLoadGameType tbc, wrath, cata, mists, mainline]
+Imports_ModernAH\Manifest.xml [AllowLoadGameType wrath, cata, mists, mainline]
+Assets_ModernAH.xml [AllowLoadGameType wrath, cata, mists, mainline]
 
-Assets_LegacyAH.xml [AllowLoadGameType vanilla]
-Imports_LegacyAH\Manifest.xml [AllowLoadGameType vanilla]
+Assets_LegacyAH.xml [AllowLoadGameType vanilla, tbc]
+Imports_LegacyAH\Manifest.xml [AllowLoadGameType vanilla, tbc]
 
 Source\Manifest.xml
 Source_Mainline\Manifest.xml [AllowLoadGameType mainline]
 Source_Classic\Manifest.xml [AllowLoadGameType classic]
-Source_ModernAH\Manifest.xml [AllowLoadGameType tbc, wrath, cata, mists, mainline]
+Source_ModernAH\Manifest.xml [AllowLoadGameType wrath, cata, mists, mainline]
 
-Source_Vanilla\Manifest.xml [AllowLoadGameType vanilla]
-Data_Vanilla\Suffixes.lua [AllowLoadGameType vanilla]
-Source_LegacyAH\Manifest.xml [AllowLoadGameType vanilla]
+Source_Vanilla\Manifest.xml [AllowLoadGameType vanilla, tbc]
+Data_Vanilla\Suffixes.lua [AllowLoadGameType vanilla, tbc]
+Source_LegacyAH\Manifest.xml [AllowLoadGameType vanilla, tbc]
