@@ -46,3 +46,5 @@ Source_ModernAH\Manifest.xml [AllowLoadGameType cata, mists, mainline]
 Source_Vanilla\Manifest.xml [AllowLoadGameType vanilla, tbc, wrath]
 Data_Vanilla\Suffixes.lua [AllowLoadGameType vanilla, tbc, wrath]
 Source_LegacyAH\Manifest.xml [AllowLoadGameType vanilla, tbc, wrath]
+
+Source_TBC\Constants\Main.lua [AllowLoadGameType tbc, wrath]

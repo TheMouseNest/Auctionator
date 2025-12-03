@@ -43,6 +43,7 @@ if Auctionator.Groups.Constants.IsRetail then
     Enum.ItemClass.Profession,
     Enum.ItemClass.Battlepet,
     Enum.ItemClass.Questitem,
+    Enum.ItemClass.Housing,
     Enum.ItemClass.Miscellaneous,
   }
 elseif Auctionator.Groups.Constants.IsMists then
