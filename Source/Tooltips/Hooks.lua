@@ -308,7 +308,14 @@ end
 -- retain stack size information
 if TooltipDataProcessor and C_TooltipInfo then
   local function ValidateTooltip(tooltip)
-    return tooltip == GameTooltip or tooltip == GameTooltipTooltip or tooltip == ItemRefTooltip or tooltip == GarrisonShipyardMapMissionTooltipTooltip or (not tooltip:IsForbidden() and (tooltip:GetName() or ""):match("^NotGameTooltip"))
+    if tooltip == GameTooltip or tooltip == GameTooltipTooltip or tooltip == ItemRefTooltip or tooltip == GarrisonShipyardMapMissionTooltipTooltip then
+      return true
+    end
+    if tooltip:IsForbidden() then
+      return false
+    end
+    local name = tooltip:GetName() or ""
+    return name:match("^NotGameTooltip") or name:match("^RSMap") -- Standard protocol, or RareScanner
   end
   TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, function(tooltip, data)
     if ValidateTooltip(tooltip) then
