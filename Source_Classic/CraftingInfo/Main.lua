@@ -119,8 +119,23 @@ local function GetAHProfit()
     return GetEnchantProfit()
   end
 
-  local recipeLink =  GetTradeSkillItemLink(recipeIndex)
+  local recipeLink = GetTradeSkillItemLink(recipeIndex)
   local count = GetTradeSkillNumMade(recipeIndex)
+  local procText = ""
+
+  -- Adjusts count if Alchemy recipe yields multiple items and player has completed the required quest 
+  if GetTradeSkillLine() == "Alchemy" and count == 1 and C_QuestLog.IsQuestFlaggedCompleted(82090) then
+    local spellName = GetTradeSkillInfo(recipeIndex)
+    local itemID = recipeLink and select(1, GetItemInfoInstant(recipeLink)) or nil
+
+    if itemID ~= 221313 and spellName then
+      local lowered = spellName:lower()
+      if lowered:find("potion") or lowered:find("flask") or lowered:find("elixir") or lowered:find("transmute") then
+        count = 2
+        procText = " (x2 proc)"  -- Indicate that it's a 2x proc
+      end
+    end
+  end
 
   if recipeLink == nil or recipeLink:match("enchant:") then
     return nil
@@ -134,25 +149,31 @@ local function GetAHProfit()
   local exact = Auctionator.API.v1.IsAuctionDataExactByItemLink(AUCTIONATOR_L_REAGENT_SEARCH, recipeLink)
   local toCraft = GetSkillReagentsTotal()
 
-  return math.floor(currentAH * count * Auctionator.Constants.AfterAHCut - toCraft), age, currentAH ~= 0, exact
+  return math.floor(currentAH * count * Auctionator.Constants.AfterAHCut - toCraft), age, currentAH ~= 0, exact, procText
 end
 
 local function CraftCostString()
   local price = WHITE_FONT_COLOR:WrapTextInColorCode(GetMoneyString(GetSkillReagentsTotal(), true))
+  local procText = ""  -- Initialize the procText
 
-  return AUCTIONATOR_L_TO_CRAFT_COLON .. " " .. price
+
+  return AUCTIONATOR_L_TO_CRAFT_COLON .. " " .. price 
 end
 
 local function ProfitString(profit)
   local price
+  local procText = ""  -- Initialize the procText
+
+  -- If there's a proc from the GetAHProfit function, show it in the profit string
+  local _, _, _, _, procText = GetAHProfit()
+
   if profit >= 0 then
     price = WHITE_FONT_COLOR:WrapTextInColorCode(GetMoneyString(profit, true))
   else
     price = RED_FONT_COLOR:WrapTextInColorCode("-" .. GetMoneyString(-profit, true))
   end
 
-  return AUCTIONATOR_L_PROFIT_COLON .. " " .. price
-
+  return AUCTIONATOR_L_PROFIT_COLON .. " " .. price .. procText
 end
 
 function Auctionator.CraftingInfo.GetInfoText()
