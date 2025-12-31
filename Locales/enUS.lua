@@ -509,6 +509,7 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["CONTRIBUTE_HEADER"] = "|cff04cca4Development is time consuming. Consider supporting|r"
   L["CONTRIBUTE_TOOLTIP_HEADER"] = "About donating"
   L["CONTRIBUTE_TOOLTIP_TEXT"] = "Auctionator has had thousands of hours spent on development and support to get it to its current state in just the last few years. Donating is one way of supporting this indefinitely."
+  L["DONATE"] = "Donate"
 
   return L
 end

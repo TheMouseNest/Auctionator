@@ -75,8 +75,8 @@
 
       <Frame inherits="AuctionatorConfigurationCopyAndPasteFrame" parentKey="ContributeLink">
         <KeyValues>
-          <KeyValue key="labelText" value="BuyMeACoffee" type="string"/>
-          <KeyValue key="copyText" value="https://buymeacoffee.com/auctionator" type="string"/>
+          <KeyValue key="labelText" value="AUCTIONATOR_L_DONATE" type="global"/>
+          <KeyValue key="copyText" value="https://linktr.ee/plusmouse" type="string"/>
           <KeyValue key="tooltipTitleText" value="AUCTIONATOR_L_CONTRIBUTE_TOOLTIP_HEADER" type="global" />
           <KeyValue key="tooltipText" value="AUCTIONATOR_L_CONTRIBUTE_TOOLTIP_TEXT" type="global" />
         </KeyValues>
@@ -109,7 +109,7 @@
       <Frame inherits="AuctionatorConfigurationCopyAndPasteFrame" parentKey="BugReportLink">
         <KeyValues>
           <KeyValue key="labelText" value="AUCTIONATOR_L_BUG_REPORT" type="global"/>
-          <KeyValue key="copyText" value="https://github.com/Auctionator/Auctionator/issues" type="string"/>
+          <KeyValue key="copyText" value="https://github.com/TheMouseNest/Auctionator/issues" type="string"/>
           <KeyValue key="tooltipTitleText" value="AUCTIONATOR_L_BUG_TOOLTIP_HEADER" type="global"/>
           <KeyValue key="tooltipText" value="AUCTIONATOR_L_BUG_TOOLTIP_TEXT" type="global"/>
         </KeyValues>
