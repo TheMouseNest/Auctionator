@@ -20,19 +20,19 @@ TooltipHandlers["SetBagItem"] = function(tip, bag, slot)
   end
 end
 
-local GetMerchantItemInfo = GetMerchantItemInfo or function(index)
-  local info = C_MerchantFrame.GetItemInfo(index);
-  if info then
-    return info.name, info.texture, info.price, info.stackCount, info.numAvailable, info.isPurchasable, info.isUsable, info.hasExtendedCost, info.currencyID, info.spellID;
-  end
-end
-
 -- This is called when mousing over an item in a merchant window (Buyback Pane)
 TooltipHandlers["SetBuybackItem"] = function(tip, slotIndex)
   local itemLink = GetBuybackItemLink(slotIndex)
   local _, _, _, itemCount = GetBuybackItemInfo(slotIndex);
 
   Auctionator.Tooltip.ShowTipWithPricing(tip, itemLink, itemCount)
+end
+
+local GetMerchantItemInfo = GetMerchantItemInfo or function(index)
+  local info = C_MerchantFrame.GetItemInfo(index);
+  if info then
+    return info.name, info.texture, info.price, info.stackCount, info.numAvailable, info.isPurchasable, info.isUsable, info.hasExtendedCost, info.currencyID, info.spellID;
+  end
 end
 
 -- This is called when mousing over an item in a merchant window (Merchant Pane)
@@ -308,7 +308,14 @@ end
 -- retain stack size information
 if TooltipDataProcessor and C_TooltipInfo then
   local function ValidateTooltip(tooltip)
-    return tooltip == GameTooltip or tooltip == GameTooltipTooltip or tooltip == ItemRefTooltip or tooltip == GarrisonShipyardMapMissionTooltipTooltip or (not tooltip:IsForbidden() and (tooltip:GetName() or ""):match("^NotGameTooltip"))
+    if tooltip == GameTooltip or tooltip == GameTooltipTooltip or tooltip == ItemRefTooltip or tooltip == GarrisonShipyardMapMissionTooltipTooltip then
+      return true
+    end
+    if tooltip:IsForbidden() then
+      return false
+    end
+    local name = tooltip:GetName() or ""
+    return name:match("^NotGameTooltip") or name:match("^RSMap") -- Standard protocol, or RareScanner
   end
   TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, function(tooltip, data)
     if ValidateTooltip(tooltip) then

@@ -34,7 +34,7 @@ Core/Config.lua
 Core/Initialize.lua
 Core/SlashCmd.lua
 
-Data/Legacy/Suffixes.lua [AllowLoadGameType vanilla]
+Data/Legacy/Suffixes.lua [AllowLoadGameType vanilla, tbc, wrath]
 
 Skins/Main.lua
 Skins/Blizzard.lua

@@ -18,6 +18,7 @@ addonTable.Scanning = {
   Modern = {},
   Legacy = {},
 }
+addonTable.Tooltips = {}
 addonTable.CustomiseDialog = {}
 addonTable.Skins = {}
 
