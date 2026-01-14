@@ -13,12 +13,15 @@ function Auctionator.Variables.Initialize()
   local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
   Auctionator.State.CurrentVersion = GetAddOnMetadata("Auctionator", "Version")
 
-  Auctionator.Variables.InitializeDatabase()
   Auctionator.Variables.InitializeShoppingLists()
   Auctionator.Variables.InitializePostingHistory()
   Auctionator.Variables.InitializeVendorPriceCache()
 
   Auctionator.Groups.Initialize()
+end
+
+function Auctionator.Variables.InitializeLate()
+  Auctionator.Variables.InitializeDatabase()
 
   Auctionator.State.Loaded = true
 end
