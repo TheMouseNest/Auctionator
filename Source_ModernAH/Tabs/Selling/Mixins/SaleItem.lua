@@ -322,7 +322,7 @@ function AuctionatorSaleItemMixin:SetItemName()
   end
   local itemName = self.itemInfo.itemName
   if reagentQuality then
-    itemName = itemName .. " " .. C_Texture.GetCraftingReagentQualityChatIcon(reagentQuality)
+    itemName = itemName .. " " .. Auctionator.Utilities.GetCraftingQualityMarkup(reagentQuality)
   elseif self.itemInfo.itemLevel then
     itemName = AUCTIONATOR_L_ITEM_NAME_X_ITEM_LEVEL_X:format(itemName, self.itemInfo.itemLevel)
   elseif self.itemInfo.itemLink:find("battlepet", nil, true) then

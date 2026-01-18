@@ -140,7 +140,7 @@ end
 
 local function TierString(tier)
   if Auctionator.Constants.IsRetail and tier ~= nil then
-    return C_Texture.GetCraftingReagentQualityChatIcon(tier)
+    return Auctionator.Utilities.GetCraftingQualityMarkup(tier)
   else
     return ""
   end
@@ -321,7 +321,7 @@ local function TooltipTier(splitSearch)
   if not Auctionator.Constants.IsRetail or splitSearch.tier == nil then
     key = AUCTIONATOR_L_ANY_LOWER
   else
-    key = C_Texture.GetCraftingReagentQualityChatIcon(splitSearch.tier)
+    key = Auctionator.Utilities.GetCraftingQualityMarkup(splitSearch.tier)
   end
 
   return {

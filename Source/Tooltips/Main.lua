@@ -363,7 +363,7 @@ function Auctionator.Tooltip.AddReagentsAuctionTip(tooltipFrame, allReagents)
       local auctionAge = Auctionator.Database:GetPriceAge(key)
       local qualitySuffix = ""
       if reagent.quality then
-        qualitySuffix = " " .. C_Texture.GetCraftingReagentQualityChatIcon(reagent.quality)
+        qualitySuffix = " " .. Auctionator.Utilities.GetCraftingQualityMarkup(reagent.quality)
       end
       local countString = ""
       if showStackPrices then

@@ -26,7 +26,7 @@ local function InitializeTierDropDown(dropDown)
 
   if Auctionator.Constants.IsRetail then
     for tier = 1, 3 do
-      table.insert(tierStrings, C_Texture.GetCraftingReagentQualityChatIcon(tier))
+      table.insert(tierStrings, Auctionator.Utilities.GetCraftingQualityMarkup(tier))
       table.insert(tierIDs, tostring(tier))
     end
   end

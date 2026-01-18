@@ -65,8 +65,6 @@ if GameTooltip.SetRecipeReagentItem then -- Dragonflight onwards
   -- Reagent in Dragonflight recipe tradeskill page, only for reagents without a
   -- quality rating.
   TooltipHandlers["SetRecipeReagentItem"] = function( tip, recipeID, slotID )
-    local itemLink = C_TradeSkillUI.GetRecipeFixedReagentItemLink(recipeID, slotID)
-
     local recipeLevel
     if ProfessionsFrame and ProfessionsFrame.CraftingPage:IsVisible() then
       recipeLevel = ProfessionsFrame.CraftingPage.SchematicForm:GetCurrentRecipeLevel()
@@ -79,6 +77,8 @@ if GameTooltip.SetRecipeReagentItem then -- Dragonflight onwards
     for _, reagentSlotSchematic in ipairs(schematic.reagentSlotSchematics) do
       if reagentSlotSchematic.dataSlotIndex == slotID then
         local itemCount = reagentSlotSchematic.quantityRequired
+        local _, itemLink = GetItemInfo(reagentSlotSchematic.reagents[1].itemID)
+
         Auctionator.Tooltip.ShowTipWithPricing(tip, itemLink, itemCount)
         break
       end
