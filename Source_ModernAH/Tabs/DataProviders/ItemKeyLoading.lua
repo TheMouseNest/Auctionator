@@ -19,7 +19,13 @@ function AuctionatorItemKeyLoadingMixin:ProcessItemKey(rowEntry, itemKeyInfo)
     itemKeyInfo,
     false
   )
-  local icon = AuctionHouseUtil.GetItemDisplayCraftingQualityIconFromItemKey(rowEntry.itemKey)
+  local icon
+  if C_TradeSkillUI and C_TradeSkillUI.GetItemReagentQualityByItemInfo then
+    local quality = C_TradeSkillUI.GetItemReagentQualityByItemInfo(rowEntry.itemKey.itemID)
+    if quality then
+      icon = Auctionator.Utilities.GetCraftingQualityMarkup(quality)
+    end
+  end
   if icon then
     text = text .. " " .. icon
   end
