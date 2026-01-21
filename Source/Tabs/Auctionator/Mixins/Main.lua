@@ -14,10 +14,5 @@ function AuctionatorConfigTabMixin:OnLoad()
 end
 
 function AuctionatorConfigTabMixin:OpenOptions()
-  if Settings and SettingsPanel then
-    Settings.OpenToCategory(AUCTIONATOR_L_AUCTIONATOR)
-  else
-    InterfaceOptionsFrame:Show()
-    InterfaceOptionsFrame_OpenToCategory(AUCTIONATOR_L_CONFIG_BASIC_OPTIONS_CATEGORY)
-  end
+  Settings.OpenToCategory(Auctionator.State.OptionsCategory:GetID())
 end
