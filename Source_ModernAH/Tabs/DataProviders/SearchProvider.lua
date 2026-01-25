@@ -85,12 +85,13 @@ function AuctionatorSearchDataProviderMixin:OnHide()
   })
 end
 
-function AuctionatorSearchDataProviderMixin:ReceiveEvent(eventName, itemKey, originalItemLink)
+function AuctionatorSearchDataProviderMixin:ReceiveEvent(eventName, itemKey, originalItemLink, originalKey)
   if eventName == Auctionator.Selling.Events.SellSearchStart then
     self:Reset()
     self.onSearchStarted()
     -- Used to prevent a sale causing the view to sometimes change to another item
     self.expectedItemKey = itemKey
+    self.originalItemKey = originalKey
     self.originalItemLink = originalItemLink
   elseif eventName == Auctionator.Selling.Events.BagItemClicked then
     self.onResetScroll()
@@ -233,7 +234,7 @@ function AuctionatorSearchDataProviderMixin:ProcessItemResults(itemKey)
   item:ContinueOnItemLoad(function()
     for index = 1, C_AuctionHouse.GetNumItemSearchResults(itemKey) do
       local resultInfo = C_AuctionHouse.GetItemSearchResultInfo(itemKey, index)
-      if Auctionator.Selling.DoesItemMatchFromLink(self.originalItemLink, resultInfo.itemKey, resultInfo.itemLink) then
+      if Auctionator.Selling.DoesItemMatchFromKey(self.originalItemKey, self.originalItemLink, resultInfo.itemKey, resultInfo.itemLink) then
         local entry = Auctionator.Search.GetBuyItemResult(resultInfo)
         -- Test if the auction has been loaded for cancelling
         if resultInfo.containsOwnerItem and not C_AuctionHouse.CanCancelAuction(resultInfo.auctionID) then
