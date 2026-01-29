@@ -1,3 +1,7 @@
+if not Auctionator.Constants.IsVanilla then
+	return
+end
+
 -- Formatter found in Blizzard_AuctionHouseUtil.lua
 local formatter = CreateFromMixins(SecondsFormatterMixin);
 formatter:Init(0, SecondsFormatter.Abbreviation.OneLetter, true);
