@@ -400,8 +400,10 @@ function AuctionatorSaleItemMixin:DoSearch(itemInfo, ...)
     sortingOrder = Auctionator.Constants.ItemResultsSorts
   end
 
+  local comparisonKey
   if IsEquipment(itemInfo) then
     self.expectedItemKey = {itemID = itemInfo.itemID, itemLevel = 0, itemSuffix = 0, battlePetSpeciesID = 0}
+    comparisonKey = {itemID = itemInfo.itemID, itemLevel = itemInfo.itemLevel, itemSuffix = 0, battlePetSpeciesID = 0}
     Auctionator.AH.SendSellSearchQueryByItemKey(self.expectedItemKey, {sortingOrder}, true)
   else
     local battlePetID = itemInfo.itemLink:match("battlepet:(%d+)")
@@ -411,9 +413,13 @@ function AuctionatorSaleItemMixin:DoSearch(itemInfo, ...)
     else
       self.expectedItemKey = C_AuctionHouse.MakeItemKey(itemInfo.itemID)
     end
+    comparisonKey = self.expectedItemKey
     Auctionator.AH.SendSearchQueryByItemKey(self.expectedItemKey, {sortingOrder}, true)
   end
-  local originalKey = IsValidItem(itemInfo) and C_AuctionHouse.GetItemKeyFromItem(itemInfo.location) or itemKey
+  local originalKey = IsValidItem(itemInfo) and C_AuctionHouse.GetItemKeyFromItem(itemInfo.location) or comparisonKey
+  if originalKey.itemLevel == 0 then
+    originalKey = comparisonKey
+  end
   Auctionator.EventBus:Fire(self, Auctionator.Selling.Events.SellSearchStart, self.expectedItemKey, itemInfo.itemLink, originalKey)
 end
 
