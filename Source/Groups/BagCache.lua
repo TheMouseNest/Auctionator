@@ -304,7 +304,11 @@ function AuctionatorBagCacheMixin:AddToCache(location, slotInfo)
       entry.quality = quality
     end
     if Auctionator.Utilities.IsEquipment(entry.classID) then
-      entry.itemLevel = C_Item.GetDetailedItemLevelInfo(entry.itemLink)
+      if Auctionator.Constants.IsRetail then
+        entry.itemLevel = Auctionator.Groups.Utilities.ExtractItemLevel(entry.itemLink)
+      else
+        entry.itemLevel = C_Item.GetDetailedItemLevelInfo(entry.itemLink)
+      end
     end
     detailsCache[entry.itemLink] = entry
   end
