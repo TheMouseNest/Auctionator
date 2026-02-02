@@ -15,6 +15,9 @@ function Auctionator.Tooltip.ShowTipWithPricing(tooltipFrame, itemLink, itemCoun
   Auctionator.Utilities.DBKeyFromLink(itemLink, function(dbKeys)
     waitingForPricing = false
     Auctionator.Tooltip.ShowTipWithPricingDBKey(tooltipFrame, dbKeys, itemLink, itemCount)
+    if Auctionator.Constants.IsClassic then
+      tooltipFrame:Show()
+    end
   end)
 end
 
@@ -119,8 +122,6 @@ function Auctionator.Tooltip.ShowTipWithPricingDBKey(tooltipFrame, dbKeys, itemL
   if millStatus then
     Auctionator.Tooltip.AddMillTip(tooltipFrame, millValue, countString)
   end
-
-  tooltipFrame:Show()
 end
 
 -- Each itemEntry in itemEntries should contain
