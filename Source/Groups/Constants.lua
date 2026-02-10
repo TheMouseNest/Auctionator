@@ -113,6 +113,7 @@ elseif Auctionator.Groups.Constants.IsBC then
     Enum.ItemClass.Gem,
     Enum.ItemClass.Miscellaneous,
     Enum.ItemClass.Questitem,
+    Enum.ItemClass.Key,
   }
 elseif Auctionator.Groups.Constants.IsVanilla then
   Auctionator.Groups.Constants.ValidItemClassIDs = {
