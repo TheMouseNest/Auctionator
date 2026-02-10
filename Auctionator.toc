@@ -1,4 +1,4 @@
-## Interface: 120000, 110207, 50503, 38000, 20505, 11508
+## Interface: 120001, 120000, 50503, 38000, 20505, 11508
 ## Title: Auctionator
 ## Version: @project-version@
 ## Author: plusmouse, Borjamacare
