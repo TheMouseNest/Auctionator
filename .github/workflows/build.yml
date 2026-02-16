@@ -27,4 +27,3 @@ jobs:
         args: -p 6124 -a kRNL70Go
       env:
         CF_API_KEY: ${{ secrets.plusmouse_curseforge }}
-        WAGO_API_TOKEN: ${{ secrets.plusmouse_wago }}
