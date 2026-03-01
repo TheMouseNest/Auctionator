@@ -316,13 +316,13 @@ end
 -- The exact item name is only loaded when needed as it slows down loading the
 -- bag items too much to do in BagDataProvider.
 function AuctionatorSaleItemMixin:SetItemName()
-  local reagentQuality
+  local reagentQualityInfo
   if Auctionator.Constants.IsRetail then
-    reagentQuality = C_TradeSkillUI.GetItemReagentQualityByItemInfo(self.itemInfo.itemID)
+    reagentQualityInfo = C_TradeSkillUI.GetItemReagentQualityInfo(self.itemInfo.itemID)
   end
   local itemName = self.itemInfo.itemName
-  if reagentQuality then
-    itemName = itemName .. " " .. Auctionator.Utilities.GetCraftingQualityMarkup(reagentQuality)
+  if reagentQualityInfo then
+    itemName = itemName .. " " .. CreateAtlasMarkup(reagentQualityInfo.iconChat, 17, 17)
   elseif self.itemInfo.itemLevel then
     itemName = AUCTIONATOR_L_ITEM_NAME_X_ITEM_LEVEL_X:format(itemName, self.itemInfo.itemLevel)
   elseif self.itemInfo.itemLink:find("battlepet", nil, true) then

@@ -25,8 +25,12 @@ local function InitializeTierDropDown(dropDown)
   table.insert(tierIDs, NO_QUALITY)
 
   if Auctionator.Constants.IsRetail then
-    for tier = 1, 3 do
-      table.insert(tierStrings, Auctionator.Utilities.GetCraftingQualityMarkup(tier))
+    for tier = 1, 2 do
+      table.insert(tierStrings, CreateAtlasMarkup("Professions-ChatIcon-Quality-12-Tier" .. tier) .. "/" .. CreateAtlasMarkup("Professions-Icon-Quality-Tier" .. tier .. "-Small", 17, 17))
+      table.insert(tierIDs, tostring(tier))
+    end
+    do
+      table.insert(tierStrings, CreateAtlasMarkup("Professions-Icon-Quality-Tier" .. 3 .. "-Small", 17, 17))
       table.insert(tierIDs, tostring(tier))
     end
   end

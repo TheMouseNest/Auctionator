@@ -19,15 +19,11 @@ function AuctionatorItemKeyLoadingMixin:ProcessItemKey(rowEntry, itemKeyInfo)
     itemKeyInfo,
     false
   )
-  local icon
   if C_TradeSkillUI and C_TradeSkillUI.GetItemReagentQualityByItemInfo then
-    local quality = C_TradeSkillUI.GetItemReagentQualityByItemInfo(rowEntry.itemKey.itemID)
-    if quality then
-      icon = Auctionator.Utilities.GetCraftingQualityMarkup(quality)
+    local info = C_TradeSkillUI.GetItemReagentQualityInfo(rowEntry.itemKey.itemID)
+    if info then
+      text = text .. " " .. CreateAtlasMarkup(info.iconChat, 17, 17)
     end
-  end
-  if icon then
-    text = text .. " " .. icon
   end
 
   rowEntry.itemName = text

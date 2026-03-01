@@ -95,9 +95,9 @@ end
 
 -- Adds Dragonflight (10.0) crafting quality icon for reagents on retail only
 function AuctionatorGroupsViewItemMixin:ApplyQualityIcon(itemLink)
-  if C_TradeSkillUI and C_TradeSkillUI.GetItemReagentQualityByItemInfo then
-    local quality = C_TradeSkillUI.GetItemReagentQualityByItemInfo(itemLink)
-    if quality ~= nil then
+  if C_TradeSkillUI and C_TradeSkillUI.GetItemReagentQualityInfo then
+    local info = C_TradeSkillUI.GetItemReagentQualityInfo(itemLink)
+    if info ~= nil then
       if not self.ProfessionQualityOverlay then
         self.ProfessionQualityOverlay = self:CreateTexture(nil, "OVERLAY");
         self.ProfessionQualityOverlay:SetPoint("TOPLEFT", -2, 2);
@@ -105,8 +105,7 @@ function AuctionatorGroupsViewItemMixin:ApplyQualityIcon(itemLink)
       end
       self.ProfessionQualityOverlay:Show()
 
-      local atlas = ("Professions-Icon-Quality-Tier%d-Inv"):format(quality);
-      self.ProfessionQualityOverlay:SetAtlas(atlas, TextureKitConstants.UseAtlasSize);
+      self.ProfessionQualityOverlay:SetAtlas(info.iconInventory, TextureKitConstants.UseAtlasSize);
     else
       self:HideQualityIcon()
     end
