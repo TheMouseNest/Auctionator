@@ -14,6 +14,25 @@ function Auctionator.CraftingInfo.InitializeProfessionsFrame()
   end
 end
 
+-- Search through a list of items for the first matching the wantedQuality.
+-- Midnight Quality-12-Tier: wantedQuality 13/14 maps to index 1/2.
+local function GetItemIDByReagentQuality(possibleItemIDs, wantedQuality)
+  if #possibleItemIDs == 1 then
+    return possibleItemIDs[1]
+  end
+  -- Midnight enchants use quality 13 (Silver/Tier1) and 14 (Gold/Tier2)
+  if wantedQuality and wantedQuality >= 13 and wantedQuality <= 14 and possibleItemIDs[wantedQuality - 12] then
+    return possibleItemIDs[wantedQuality - 12]
+  end
+
+  for _, itemID in ipairs(possibleItemIDs) do
+    local quality = C_TradeSkillUI.GetItemReagentQualityByItemInfo(itemID)
+    if quality == wantedQuality then
+      return itemID
+    end
+  end
+end
+
 function Auctionator.CraftingInfo.DoTradeSkillReagentsSearch(schematicForm, quantity)
   local recipeInfo = schematicForm:GetRecipeInfo()
   local recipeID = recipeInfo.recipeID
@@ -98,20 +117,6 @@ end
 
 local function CalculateProfitFromCosts(currentAH, toCraft, count)
   return math.floor(math.floor(currentAH * count * Auctionator.Constants.AfterAHCut - toCraft) / 100) * 100
-end
-
--- Search through a list of items for the first matching the wantedQuality
-local function GetItemIDByReagentQuality(possibleItemIDs, wantedQuality)
-  if #possibleItemIDs == 1 then
-    return possibleItemIDs[1]
-  end
-
-  for _, itemID in ipairs(possibleItemIDs) do
-    local quality = C_TradeSkillUI.GetItemReagentQualityByItemInfo(itemID)
-    if quality == wantedQuality then
-      return itemID
-    end
-  end
 end
 
 local function GetEnchantProfit(schematicForm)

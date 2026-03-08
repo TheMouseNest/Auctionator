@@ -267,6 +267,19 @@ end
 
 if GameTooltip.SetItemKey then
   TooltipHandlers["SetItemKey"] = function(tip, itemID, itemLevel, itemSuffix)
+    -- Use itemKey for price lookup so itemLevel is preserved (AH, crafting UI)
+    if Auctionator.Constants.IsRetail and Auctionator.Utilities.DBKeysFromItemKey then
+      local itemKey = {itemID = itemID, itemLevel = itemLevel or 0, itemSuffix = itemSuffix or 0, battlePetSpeciesID = 0}
+      local dbKeys = Auctionator.Utilities.DBKeysFromItemKey(itemKey)
+      if #dbKeys > 0 then
+        local info = C_TooltipInfo and C_TooltipInfo.GetItemKey(itemID, itemLevel or 0, itemSuffix or 0)
+        local itemLink = info and info.hyperlink or select(2, C_Item.GetItemInfo(itemID))
+        if itemLink then
+          Auctionator.Tooltip.ShowTipWithPricingDBKey(tip, dbKeys, itemLink, 1)
+          return
+        end
+      end
+    end
     local itemLink
     if C_TooltipInfo then
       local info = C_TooltipInfo and C_TooltipInfo.GetItemKey(itemID, itemLevel, itemSuffix)
