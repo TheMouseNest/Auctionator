@@ -36,10 +36,16 @@ function Auctionator.CraftingInfo.DoTradeSkillReagentsSearch(schematicForm, quan
   if outputLink then
     table.insert(possibleItems, outputLink)
     continuableContainer:AddContinuable(Item:CreateFromItemLink(outputLink))
-  -- Special case, enchants don't include an output in the API, so we use a
-  -- precomputed table to get the output
+  -- Special case: enchants don't include an output in the API, so we use a
+  -- precomputed table. Use selected quality for Midnight (13/14) tier selection.
   elseif Auctionator.CraftingInfo.EnchantSpellsToItems[recipeID] then
-    local itemID = Auctionator.CraftingInfo.EnchantSpellsToItems[recipeID][1]
+    local possibleOutputItemIDs = Auctionator.CraftingInfo.EnchantSpellsToItems[recipeID]
+    local qualityID
+    if recipeSchematic and recipeSchematic.hasCraftingOperationInfo then
+      local operationInfo = C_TradeSkillUI.GetCraftingOperationInfo(recipeID, transaction:CreateCraftingReagentInfoTbl(), transaction:GetAllocationItemGUID(), transaction:IsApplyingConcentration())
+      qualityID = operationInfo and operationInfo.guaranteedCraftingQualityID
+    end
+    local itemID = GetItemIDByReagentQuality(possibleOutputItemIDs, qualityID) or possibleOutputItemIDs[1]
     table.insert(possibleItems, itemID)
     continuableContainer:AddContinuable(Item:CreateFromItemID(itemID))
   -- Probably doesn't have a specific item output, but include the recipe name
@@ -100,10 +106,15 @@ local function CalculateProfitFromCosts(currentAH, toCraft, count)
   return math.floor(math.floor(currentAH * count * Auctionator.Constants.AfterAHCut - toCraft) / 100) * 100
 end
 
--- Search through a list of items for the first matching the wantedQuality
+-- Search through a list of items for the first matching the wantedQuality.
+-- Midnight Quality-12-Tier: wantedQuality 13/14 maps to index 1/2.
 local function GetItemIDByReagentQuality(possibleItemIDs, wantedQuality)
   if #possibleItemIDs == 1 then
     return possibleItemIDs[1]
+  end
+  -- Midnight enchants use quality 13 (Silver/Tier1) and 14 (Gold/Tier2)
+  if wantedQuality and wantedQuality >= 13 and wantedQuality <= 14 and possibleItemIDs[wantedQuality - 12] then
+    return possibleItemIDs[wantedQuality - 12]
   end
 
   for _, itemID in ipairs(possibleItemIDs) do
@@ -125,6 +136,7 @@ local function GetEnchantProfit(schematicForm)
 
   local possibleOutputItemIDs = Auctionator.CraftingInfo.EnchantSpellsToItems[recipeID] or {}
   local itemID
+  local recipeLink
 
   -- For Dragonflight recipes determine the quality and then select the quality
   -- from the list of possible results.
@@ -133,18 +145,40 @@ local function GetEnchantProfit(schematicForm)
     local operationInfo = C_TradeSkillUI.GetCraftingOperationInfo(recipeID, reagents, allocationGUID, applyConcentration)
     if operationInfo ~= nil then
       itemID = GetItemIDByReagentQuality(possibleOutputItemIDs, operationInfo.guaranteedCraftingQualityID)
+      if not itemID and #possibleOutputItemIDs > 0 then
+        itemID = possibleOutputItemIDs[1]
+      end
+      -- Midnight enchants: qualityItemIDs nil, guaranteedCraftingQualityID 13/14.
+      -- Fall back to GetRecipeOutputItemData when EnchantSpellsToItems lookup fails.
+      if not itemID then
+        local outputData = C_TradeSkillUI.GetRecipeOutputItemData(recipeID, reagents, allocationGUID, operationInfo.guaranteedCraftingQualityID)
+        if not outputData or not outputData.hyperlink then
+          outputData = C_TradeSkillUI.GetRecipeOutputItemData(recipeID, reagents, allocationGUID, nil)
+        end
+        if outputData and outputData.hyperlink then
+          recipeLink = outputData.hyperlink
+          itemID = C_Item.GetItemInfoInstant(recipeLink)
+        end
+      end
     end
   end
-  -- Not a dragonflight recipe, or has no quality data, so only one possible
-  -- output
+  -- Not a dragonflight recipe, or has no quality data, so only one possible output
   if itemID == nil then
     itemID = possibleOutputItemIDs[1]
   end
 
-  if itemID ~= nil then
-    local currentAH = Auctionator.API.v1.GetAuctionPriceByItemID(AUCTIONATOR_L_REAGENT_SEARCH, itemID) or 0
-    local age = Auctionator.API.v1.GetAuctionAgeByItemID(AUCTIONATOR_L_REAGENT_SEARCH, itemID)
-    local exact = Auctionator.API.v1.IsAuctionDataExactByItemID(AUCTIONATOR_L_REAGENT_SEARCH, itemID)
+  if itemID ~= nil or recipeLink ~= nil then
+    -- Use recipeLink when itemID is nil (e.g. Midnight fallback via GetRecipeOutputItemData)
+    local currentAH, age, exact
+    if itemID then
+      currentAH = Auctionator.API.v1.GetAuctionPriceByItemID(AUCTIONATOR_L_REAGENT_SEARCH, itemID) or 0
+      age = Auctionator.API.v1.GetAuctionAgeByItemID(AUCTIONATOR_L_REAGENT_SEARCH, itemID)
+      exact = Auctionator.API.v1.IsAuctionDataExactByItemID(AUCTIONATOR_L_REAGENT_SEARCH, itemID)
+    else
+      currentAH = Auctionator.API.v1.GetAuctionPriceByItemLink(AUCTIONATOR_L_REAGENT_SEARCH, recipeLink) or 0
+      age = Auctionator.API.v1.GetAuctionAgeByItemLink(AUCTIONATOR_L_REAGENT_SEARCH, recipeLink)
+      exact = Auctionator.API.v1.IsAuctionDataExactByItemLink(AUCTIONATOR_L_REAGENT_SEARCH, recipeLink)
+    end
 
     local vellumCost = Auctionator.API.v1.GetVendorPriceByItemID(AUCTIONATOR_L_REAGENT_SEARCH, Auctionator.Constants.EnchantingVellumID) or 0
     local toCraft = GetSkillReagentsTotal(schematicForm) + vellumCost
@@ -164,20 +198,36 @@ local function GetAHProfit(schematicForm)
     return GetEnchantProfit(schematicForm)
 
   else
+    -- Craftable reagents (e.g. missives): use guaranteedCraftingQualityID for
+    -- Quality-12-Tier (13/14) and equipment (5-8). Updates when switching tiers.
+    local transaction = schematicForm:GetTransaction()
+    local reagents = transaction:CreateCraftingReagentInfoTbl()
+    local allocationGUID = transaction:GetAllocationItemGUID()
     local operationInfo = C_TradeSkillUI.GetCraftingOperationInfo(
-      recipeInfo.recipeID,
-      schematicForm:GetTransaction():CreateCraftingReagentInfoTbl(),
-      schematicForm:GetTransaction():GetAllocationItemGUID(),
-      schematicForm:GetTransaction():IsApplyingConcentration()
+      recipeInfo.recipeID, reagents, allocationGUID, transaction:IsApplyingConcentration()
     )
-    local qualityOverride = operationInfo and recipeInfo.qualityIDs and recipeInfo.qualityIDs[operationInfo.craftingQuality]
-    local outputData = C_TradeSkillUI.GetRecipeOutputItemData(
-      recipeInfo.recipeID,
-      schematicForm:GetTransaction():CreateCraftingReagentInfoTbl(),
-      schematicForm:GetTransaction():GetAllocationItemGUID(),
-      qualityOverride
-    )
-    local recipeLink = outputData and outputData.hyperlink
+
+    local recipeLink
+    if operationInfo and recipeInfo.qualityItemIDs and #recipeInfo.qualityItemIDs > 0 then
+      -- Quality-12-Tier (Midnight): q 13/14 maps to index 1/2. Equipment uses qualityItemIDs[q].
+      local q = operationInfo.guaranteedCraftingQualityID
+      local itemID = (q and q >= 13 and q <= 14) and recipeInfo.qualityItemIDs[q - 12] or (q and recipeInfo.qualityItemIDs[q])
+      if itemID then
+        local _, link = C_Item.GetItemInfo(itemID)
+        recipeLink = link
+      end
+    end
+
+    if not recipeLink then
+      local qualityOverride = operationInfo and operationInfo.guaranteedCraftingQualityID
+      if not qualityOverride and operationInfo and recipeInfo.qualityIDs then
+        qualityOverride = recipeInfo.qualityIDs[operationInfo.craftingQuality]
+      end
+      local outputData = C_TradeSkillUI.GetRecipeOutputItemData(
+        recipeInfo.recipeID, reagents, allocationGUID, qualityOverride
+      )
+      recipeLink = outputData and outputData.hyperlink
+    end
 
     if recipeLink ~= nil then
       local currentAH = Auctionator.API.v1.GetAuctionPriceByItemLink(AUCTIONATOR_L_REAGENT_SEARCH, recipeLink) or 0
