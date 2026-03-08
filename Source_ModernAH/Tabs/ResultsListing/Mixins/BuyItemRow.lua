@@ -39,9 +39,12 @@ function AuctionatorBuyItemRowMixin:OnClick(button, ...)
     Auctionator.Utilities.InsertLink(self.rowData.itemLink)
 
   elseif self.rowData.canBuy then
+    local shortcut = Auctionator.Config.Get(Auctionator.Config.Options.SHOPPING_SKIP_BUY_CONFIRMATION)
+    local skipConfirmation = shortcut ~= Auctionator.Config.Shortcuts.NONE and
+      Auctionator.Utilities.IsShortcutActive(shortcut, button)
     Auctionator.EventBus
       :RegisterSource(self, "BuyItemRow")
-      :Fire(self, Auctionator.Buying.Events.ShowItemConfirmation, self.rowData)
+      :Fire(self, Auctionator.Buying.Events.ShowItemConfirmation, self.rowData, skipConfirmation)
       :UnregisterSource(self)
   end
 end

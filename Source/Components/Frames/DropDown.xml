@@ -1,5 +1,5 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
-  <Frame name="AuctionatorDropDown" mixin="AuctionatorDropDownMixin" virtual="true">
+  <Frame name="AuctionatorDropDown" mixin="AuctionatorDropDownMixin,AuctionatorConfigTooltipMixin" inherits="AuctionatorConfigurationTooltip" virtual="true">
     <!--
       <KeyValues>
         <KeyValue key="labelText" value="" type="string"/>
@@ -9,6 +9,8 @@
     -->
     <Scripts>
       <OnLoad method="OnLoad"/>
+      <OnEnter method="OnEnter"/>
+      <OnLeave method="OnLeave"/>
     </Scripts>
     <Size y="40"/>
 
