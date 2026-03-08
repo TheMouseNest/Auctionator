@@ -3,6 +3,17 @@ local function IsGear(itemID)
   return Auctionator.Utilities.IsEquipment(classType)
 end
 
+-- Build DB keys from itemKey (itemID, itemLevel, itemSuffix) for price lookup.
+-- Preserves itemLevel for crafted gear so each ilvl tier shows its correct AH price.
+function Auctionator.Utilities.DBKeysFromItemKey(itemKey)
+  if not itemKey then return {} end
+  if (itemKey.battlePetSpeciesID or 0) ~= 0 then return {"p:" .. tostring(itemKey.battlePetSpeciesID)} end
+  if IsGear(itemKey.itemID) and (itemKey.itemLevel or 0) >= Auctionator.Constants.ITEM_LEVEL_THRESHOLD then
+    return {"g:" .. itemKey.itemID .. ":" .. (itemKey.itemLevel or 0), tostring(itemKey.itemID)}
+  end
+  return {tostring(itemKey.itemID)}
+end
+
 function Auctionator.Utilities.DBKeyFromBrowseResult(result)
   if result.itemKey.battlePetSpeciesID ~= 0 then
     return {"p:" .. tostring(result.itemKey.battlePetSpeciesID)}
