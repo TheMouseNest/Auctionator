@@ -8,6 +8,38 @@ end
 
 local TooltipHandlers = {}
 
+-- Resolves recipe output link for tooltip with correct quality (Current vs Next, Tier1 vs Tier2).
+-- Uses qualityID from tooltip when available, else operationInfo.guaranteedCraftingQualityID.
+local function GetRecipeOutputLinkForTooltip(recipeID, recipeLevel, transaction, qualityID)
+  local reagents = transaction:CreateCraftingReagentInfoTbl()
+  local allocationGUID = transaction:GetAllocationItemGUID()
+  local op = C_TradeSkillUI.GetCraftingOperationInfo(recipeID, reagents, allocationGUID, transaction:IsApplyingConcentration())
+  local q = qualityID or (op and op.guaranteedCraftingQualityID)
+  local rInfo = C_TradeSkillUI.GetRecipeInfo(recipeID, recipeLevel or 0)
+
+  if rInfo and rInfo.qualityItemIDs and #rInfo.qualityItemIDs > 0 and q then
+    local outID = (q >= 13 and q <= 14) and rInfo.qualityItemIDs[q - 12] or rInfo.qualityItemIDs[q]
+    if outID then return select(2, C_Item.GetItemInfo(outID)) end
+  end
+
+  local qualityOverride = (not rInfo or not rInfo.qualityItemIDs or #rInfo.qualityItemIDs == 0) and q or nil
+  local out = C_TradeSkillUI.GetRecipeOutputItemData(recipeID, reagents, allocationGUID, qualityOverride)
+  return out and out.hyperlink
+end
+
+-- Returns the schematic form from CraftingPage or OrdersPage when in Professions UI.
+local function GetProfessionsSchematicForm()
+  if not ProfessionsFrame then return nil end
+  if ProfessionsFrame.CraftingPage and ProfessionsFrame.CraftingPage:IsVisible() then
+    return ProfessionsFrame.CraftingPage.SchematicForm
+  end
+  local ov = ProfessionsFrame.OrdersPage and ProfessionsFrame.OrdersPage.OrderView
+  if ov and ProfessionsFrame.OrdersPage:IsVisible() and ov.OrderDetails then
+    return ov.OrderDetails.SchematicForm
+  end
+  return nil
+end
+
 -- This is called when mousing over an item in your bags
 TooltipHandlers["SetBagItem"] = function(tip, bag, slot)
   local itemLocation = ItemLocation:CreateFromBagAndSlot(bag, slot)
@@ -87,14 +119,33 @@ if GameTooltip.SetRecipeReagentItem then -- Dragonflight onwards
 end
 
 if GameTooltip.SetRecipeResultItem then -- Dragonflight onwards
+  -- Recipe output icon: use transaction + qualityID for correct Vendor/Auction prices when switching tiers.
   TooltipHandlers["SetRecipeResultItem"] = function(tip, recipeID, reagents, allocations, recipeLevel, qualityID)
-    local outputInfo = C_TradeSkillUI.GetRecipeOutputItemData(recipeID, reagents, allocations, qualityID)
-    local outputLink = outputInfo and outputInfo.hyperlink
+    local schematicForm = GetProfessionsSchematicForm()
+    local transaction = schematicForm and schematicForm:GetTransaction()
+    local outputLink = transaction and GetRecipeOutputLinkForTooltip(recipeID, recipeLevel, transaction, qualityID)
+
+    if not outputLink then
+      -- Fallback when transaction unavailable or empty reagents (e.g. Sienna Ink)
+      local reagentTbl, allocationGUID = reagents, allocations
+      if transaction and (not reagentTbl or next(reagentTbl) == nil) then
+        reagentTbl = transaction:CreateCraftingReagentInfoTbl()
+        allocationGUID = transaction:GetAllocationItemGUID()
+      end
+      local rInfo = C_TradeSkillUI.GetRecipeInfo(recipeID, recipeLevel or 0)
+      local q = qualityID
+      if not q and transaction then
+        local op = C_TradeSkillUI.GetCraftingOperationInfo(recipeID, reagentTbl or {}, allocationGUID, transaction:IsApplyingConcentration())
+        q = op and op.guaranteedCraftingQualityID
+      end
+      local qualityOverride = (not rInfo or not rInfo.qualityItemIDs or #rInfo.qualityItemIDs == 0) and q or nil
+      local out = C_TradeSkillUI.GetRecipeOutputItemData(recipeID, reagentTbl or {}, allocationGUID, qualityOverride)
+      outputLink = out and out.hyperlink
+    end
 
     if outputLink then
-      local recipeSchematic = C_TradeSkillUI.GetRecipeSchematic(recipeID, false, recipeLevel)
-
-      Auctionator.Tooltip.ShowTipWithPricing(tip, outputLink, recipeSchematic.quantityMin)
+      local schematic = C_TradeSkillUI.GetRecipeSchematic(recipeID, false, recipeLevel or 0)
+      Auctionator.Tooltip.ShowTipWithPricing(tip, outputLink, schematic and schematic.quantityMin or 1)
     end
   end
 end
@@ -288,15 +339,35 @@ if GameTooltip.SetItemKey then
   end
 end
 
--- Occurs when mousing over items in the Refer-a-Friend frame, and a few other places
+-- Occurs when mousing over items in the Refer-a-Friend frame, Professions output icon, and elsewhere.
+-- When in Professions UI and item is recipe output, use correct quality link for pricing.
 TooltipHandlers["SetItemByID"] = function (tip, itemID)
-  if not itemID then
-    return
+  if not itemID then return end
+  local itemLink, count = select(2, C_Item.GetItemInfo(itemID)), 1
+  local schematicForm = GetProfessionsSchematicForm()
+  if schematicForm then
+    local recipeInfo = schematicForm:GetRecipeInfo()
+    local transaction = schematicForm:GetTransaction()
+    if recipeInfo and transaction then
+      local correctLink = GetRecipeOutputLinkForTooltip(recipeInfo.recipeID, schematicForm:GetCurrentRecipeLevel(), transaction, nil)
+      if correctLink then
+        local rInfo = C_TradeSkillUI.GetRecipeInfo(recipeInfo.recipeID, schematicForm:GetCurrentRecipeLevel())
+        local isOutput = false
+        if rInfo and rInfo.qualityItemIDs then
+          for _, q in ipairs(rInfo.qualityItemIDs) do if q == itemID then isOutput = true break end end
+        end
+        if not isOutput then
+          local def = C_TradeSkillUI.GetRecipeOutputItemData(recipeInfo.recipeID, {}, nil, nil)
+          isOutput = def and C_Item.GetItemInfoInstant(def.hyperlink) == itemID
+        end
+        if isOutput then
+          local schematic = C_TradeSkillUI.GetRecipeSchematic(recipeInfo.recipeID, false, schematicForm:GetCurrentRecipeLevel())
+          itemLink, count = correctLink, schematic and schematic.quantityMin or 1
+        end
+      end
+    end
   end
-
-  local itemLink = select(2, C_Item.GetItemInfo(itemID))
-
-  Auctionator.Tooltip.ShowTipWithPricing(tip, itemLink, 1)
+  Auctionator.Tooltip.ShowTipWithPricing(tip, itemLink, count)
 end
 
 -- Occurs mainly with addons (Blizzard and otherwise)

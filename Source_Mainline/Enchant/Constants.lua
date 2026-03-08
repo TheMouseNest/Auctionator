@@ -16,6 +16,11 @@ local ENCHANT_REAGENTS = {
   SMALL_LUMINOUS_SHARD = "115502",
   TEMPORAL_CRYSTAL = "113588",
   FRACTURED_TEMPORAL_CRYSTAL = "115504",
+
+  -- Midnight (Quality-12-Tier: materials have quality 13/14; use primary item ID for pricing)
+  EVERSINGING_DUST = "243600",
+  RADIANT_SHARD = "243602",
+  DAWN_CRYSTAL = "243605",
 }
 
 Auctionator.Enchant.DE_TABLE = {
@@ -65,5 +70,19 @@ Auctionator.Enchant.DE_TABLE = {
       [ENCHANT_REAGENTS.TEMPORAL_CRYSTAL] = {0.59},
       [ENCHANT_REAGENTS.FRACTURED_TEMPORAL_CRYSTAL] = {0, 0, 0.41},
     },
-  }
+  },
+  -- Midnight (LE_EXPANSION_MIDNIGHT or 11). Materials have quality 13/14 (Silver/Gold).
+  [LE_EXPANSION_MIDNIGHT or 11] = {
+    [Enum.ItemQuality.Uncommon] = {
+      [ENCHANT_REAGENTS.EVERSINGING_DUST] = {0.333, 0.333, 0.333}
+    },
+    [Enum.ItemQuality.Rare] = {
+      [ENCHANT_REAGENTS.EVERSINGING_DUST] = {0.49, 0.45},
+      [ENCHANT_REAGENTS.RADIANT_SHARD] = {0.99}
+    },
+    [Enum.ItemQuality.Epic] = {
+      [ENCHANT_REAGENTS.RADIANT_SHARD] = {0.35},
+      [ENCHANT_REAGENTS.DAWN_CRYSTAL] = {1},
+    }
+  },
 }
