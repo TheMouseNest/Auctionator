@@ -250,7 +250,7 @@
           <Button parentKey="BuyButton" inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_BUY_NOW">
             <Scripts>
               <OnClick>
-                self:GetParent():GetParent():BuyClicked()
+                self:GetParent():GetParent():BuyClicked(button)
               </OnClick>
             </Scripts>
             <Anchors>

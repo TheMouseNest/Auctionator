@@ -501,6 +501,9 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY"] = "Always type quantity twice when purchasing commodities from the shopping tab"
   L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY_TOOLTIP_HEADER"] = "Confirm quantity every time"
   L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY_TOOLTIP_TEXT"] = "By default the quantity is confirmed just once, this makes it so you have to type it a second time to confirm the purchase."
+  L["CONFIG_SHOPPING_SKIP_BUY_CONFIRMATION"] = "Shortcut to skip buy confirmation dialogs"
+  L["CONFIG_SHOPPING_SKIP_BUY_CONFIRMATION_TOOLTIP_HEADER"] = "Skip confirmation"
+  L["CONFIG_SHOPPING_SKIP_BUY_CONFIRMATION_TOOLTIP_TEXT"] = "When using this shortcut (e.g. Alt+Right Click), purchases are completed immediately without showing the confirmation dialog.\n\n|cffff0000Use with caution.|r"
 
   L["POSTING_SETTINGS_COLON"] = "Posting Settings:"
   L["ADD_TO_X"] = "Add to %s"
