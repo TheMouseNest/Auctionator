@@ -16,21 +16,15 @@ function AuctionatorCraftingInfoProfessionsFrameMixin:OnLoad()
     end
   end
 
-  -- Uses Init rather than an event as the event handler can fire before the
-  -- ProfessionsPane pane has finished initialising a recipe
-  hooksecurefunc(self:GetParent(), "Init", function()
-    Update()
-    -- Deferred update: recipe/transaction may not be ready on first Init
-    C_Timer.After(0, Update)
-  end)
-
-  local function UpdateWithDefer()
-    Update()
+  -- Defer one frame: recipe/transaction may not be ready when handlers fire
+  local function UpdateDeferred()
     C_Timer.After(0, Update)
   end
-  self:GetParent():RegisterCallback(ProfessionsRecipeSchematicFormMixin.Event.AllocationsModified, UpdateWithDefer)
-  self:GetParent():RegisterCallback(ProfessionsRecipeSchematicFormMixin.Event.UseBestQualityModified, UpdateWithDefer)
-  hooksecurefunc(self:GetParent(), "statsChangedHandler", UpdateWithDefer)
+
+  hooksecurefunc(self:GetParent(), "Init", UpdateDeferred)
+  self:GetParent():RegisterCallback(ProfessionsRecipeSchematicFormMixin.Event.AllocationsModified, UpdateDeferred)
+  self:GetParent():RegisterCallback(ProfessionsRecipeSchematicFormMixin.Event.UseBestQualityModified, UpdateDeferred)
+  hooksecurefunc(self:GetParent(), "statsChangedHandler", UpdateDeferred)
 
   Auctionator.API.v1.RegisterForDBUpdate(AUCTIONATOR_L_REAGENT_SEARCH, function()
     if self:IsVisible() then

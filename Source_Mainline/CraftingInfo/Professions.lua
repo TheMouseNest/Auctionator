@@ -170,6 +170,7 @@ local function GetEnchantProfit(schematicForm)
   end
 
   if itemID ~= nil then
+    -- Do not display profit for bind-on-pickup items; they cannot be sold on the auction house.
     local itemInfo = { C_Item.GetItemInfo(itemID) }
     if Auctionator.Utilities.IsBound(itemInfo) then
       return nil
@@ -200,6 +201,7 @@ local function GetAHProfit(schematicForm)
     local recipeLink = Auctionator.CraftingInfo.GetRecipeOutputLink(schematicForm, nil)
 
     if recipeLink ~= nil then
+      -- Do not display profit for bind-on-pickup items; they cannot be sold on the auction house.
       local itemInfo = { C_Item.GetItemInfo(recipeLink) }
       if Auctionator.Utilities.IsBound(itemInfo) then
         return nil
