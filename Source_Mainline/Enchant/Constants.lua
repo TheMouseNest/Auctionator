@@ -16,6 +16,14 @@ local ENCHANT_REAGENTS = {
   SMALL_LUMINOUS_SHARD = "115502",
   TEMPORAL_CRYSTAL = "113588",
   FRACTURED_TEMPORAL_CRYSTAL = "115504",
+
+  -- Midnight (Quality-12-Tier: materials have quality 13/14 Silver/Gold; 50/50 split for expected value)
+  EVERSINGING_DUST_SILVER = "243599",
+  EVERSINGING_DUST_GOLD = "243600",
+  RADIANT_SHARD_SILVER = "243601",
+  RADIANT_SHARD_GOLD = "243602",
+  DAWN_CRYSTAL_SILVER = "243604",
+  DAWN_CRYSTAL_GOLD = "243605",
 }
 
 Auctionator.Enchant.DE_TABLE = {
@@ -65,5 +73,21 @@ Auctionator.Enchant.DE_TABLE = {
       [ENCHANT_REAGENTS.TEMPORAL_CRYSTAL] = {0.59},
       [ENCHANT_REAGENTS.FRACTURED_TEMPORAL_CRYSTAL] = {0, 0, 0.41},
     },
-  }
+  },
+  -- Midnight (LE_EXPANSION_MIDNIGHT or 11). Materials have quality 13/14 (Silver/Gold).
+  -- Silver/Gold splits are hypothetical; reality depends on skill and specialization, which are not implemented.
+  [LE_EXPANSION_MIDNIGHT or 11] = {
+    [Enum.ItemQuality.Uncommon] = {
+      [ENCHANT_REAGENTS.EVERSINGING_DUST_SILVER] = {0.1665, 0.1665, 0.1665},
+      [ENCHANT_REAGENTS.EVERSINGING_DUST_GOLD] = {0.1665, 0.1665, 0.1665},
+    },
+    [Enum.ItemQuality.Rare] = {
+      [ENCHANT_REAGENTS.RADIANT_SHARD_SILVER] = {0.5},
+      [ENCHANT_REAGENTS.RADIANT_SHARD_GOLD] = {0.5},
+    },
+    [Enum.ItemQuality.Epic] = {
+      [ENCHANT_REAGENTS.DAWN_CRYSTAL_SILVER] = {0.75},
+      [ENCHANT_REAGENTS.DAWN_CRYSTAL_GOLD] = {0.25},
+    }
+  },
 }
