@@ -100,6 +100,35 @@ local function CalculateProfitFromCosts(currentAH, toCraft, count)
   return math.floor(math.floor(currentAH * count * Auctionator.Constants.AfterAHCut - toCraft) / 100) * 100
 end
 
+-- Shared with tooltip: resolves recipe output link using guaranteedCraftingQualityID.
+-- Midnight only: quality 13/14 -> qualityItemIDs index 1/2 (subtract 12).
+function Auctionator.CraftingInfo.GetRecipeOutputLink(schematicForm, qualityID)
+  if not schematicForm then return nil end
+  local recipeInfo = schematicForm:GetRecipeInfo()
+  local recipeID = recipeInfo.recipeID
+  local transaction = schematicForm:GetTransaction()
+  local reagents = transaction:CreateCraftingReagentInfoTbl()
+  local allocationGUID = transaction:GetAllocationItemGUID()
+  local op = C_TradeSkillUI.GetCraftingOperationInfo(recipeID, reagents, allocationGUID, transaction:IsApplyingConcentration())
+  local q = qualityID or (op and op.guaranteedCraftingQualityID)
+
+  if recipeInfo.qualityItemIDs and #recipeInfo.qualityItemIDs > 0 and q then
+    local idx = (q >= 13 and q <= 14) and (q - 12) or q
+    local outID = recipeInfo.qualityItemIDs[idx]
+    if outID then return select(2, C_Item.GetItemInfo(outID)) end
+  end
+
+  local qualityOverride = op and recipeInfo.qualityIDs and recipeInfo.qualityIDs[op.craftingQuality]
+  local out = C_TradeSkillUI.GetRecipeOutputItemData(recipeID, reagents, allocationGUID, qualityOverride)
+  if out and out.hyperlink then return out.hyperlink end
+
+  if Auctionator.CraftingInfo.EnchantSpellsToItems and Auctionator.CraftingInfo.EnchantSpellsToItems[recipeID] then
+    local itemID = Auctionator.CraftingInfo.EnchantSpellsToItems[recipeID][1]
+    if itemID then return select(2, C_Item.GetItemInfo(itemID)) end
+  end
+  return nil
+end
+
 -- Search through a list of items for the first matching the wantedQuality
 local function GetItemIDByReagentQuality(possibleItemIDs, wantedQuality, allQualities)
   if #possibleItemIDs == 1 then
@@ -141,6 +170,10 @@ local function GetEnchantProfit(schematicForm)
   end
 
   if itemID ~= nil then
+    local itemInfo = { C_Item.GetItemInfo(itemID) }
+    if Auctionator.Utilities.IsBound(itemInfo) then
+      return nil
+    end
     local currentAH = Auctionator.API.v1.GetAuctionPriceByItemID(AUCTIONATOR_L_REAGENT_SEARCH, itemID) or 0
     local age = Auctionator.API.v1.GetAuctionAgeByItemID(AUCTIONATOR_L_REAGENT_SEARCH, itemID)
     local exact = Auctionator.API.v1.IsAuctionDataExactByItemID(AUCTIONATOR_L_REAGENT_SEARCH, itemID)
@@ -163,22 +196,14 @@ local function GetAHProfit(schematicForm)
     return GetEnchantProfit(schematicForm)
 
   else
-    local operationInfo = C_TradeSkillUI.GetCraftingOperationInfo(
-      recipeInfo.recipeID,
-      schematicForm:GetTransaction():CreateCraftingReagentInfoTbl(),
-      schematicForm:GetTransaction():GetAllocationItemGUID(),
-      schematicForm:GetTransaction():IsApplyingConcentration()
-    )
-    local qualityOverride = operationInfo and recipeInfo.qualityIDs and recipeInfo.qualityIDs[operationInfo.craftingQuality]
-    local outputData = C_TradeSkillUI.GetRecipeOutputItemData(
-      recipeInfo.recipeID,
-      schematicForm:GetTransaction():CreateCraftingReagentInfoTbl(),
-      schematicForm:GetTransaction():GetAllocationItemGUID(),
-      qualityOverride
-    )
-    local recipeLink = outputData and outputData.hyperlink
+    -- Use same output resolution as tooltip (GetRecipeOutputLink) so profit line matches tooltip.
+    local recipeLink = Auctionator.CraftingInfo.GetRecipeOutputLink(schematicForm, nil)
 
     if recipeLink ~= nil then
+      local itemInfo = { C_Item.GetItemInfo(recipeLink) }
+      if Auctionator.Utilities.IsBound(itemInfo) then
+        return nil
+      end
       local currentAH = Auctionator.API.v1.GetAuctionPriceByItemLink(AUCTIONATOR_L_REAGENT_SEARCH, recipeLink) or 0
       local age = Auctionator.API.v1.GetAuctionAgeByItemLink(AUCTIONATOR_L_REAGENT_SEARCH, recipeLink)
       local exact = Auctionator.API.v1.IsAuctionDataExactByItemLink(AUCTIONATOR_L_REAGENT_SEARCH, recipeLink)
