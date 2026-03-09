@@ -16,15 +16,16 @@ function AuctionatorCraftingInfoProfessionsFrameMixin:OnLoad()
     end
   end
 
-  -- Defer one frame: recipe/transaction may not be ready when handlers fire
-  local function UpdateDeferred()
+  -- Immediate + deferred: recipe/transaction may not be ready when handlers fire
+  local function UpdateWithDefer()
+    Update()
     C_Timer.After(0, Update)
   end
 
-  hooksecurefunc(self:GetParent(), "Init", UpdateDeferred)
-  self:GetParent():RegisterCallback(ProfessionsRecipeSchematicFormMixin.Event.AllocationsModified, UpdateDeferred)
-  self:GetParent():RegisterCallback(ProfessionsRecipeSchematicFormMixin.Event.UseBestQualityModified, UpdateDeferred)
-  hooksecurefunc(self:GetParent(), "statsChangedHandler", UpdateDeferred)
+  hooksecurefunc(self:GetParent(), "Init", UpdateWithDefer)
+  self:GetParent():RegisterCallback(ProfessionsRecipeSchematicFormMixin.Event.AllocationsModified, UpdateWithDefer)
+  self:GetParent():RegisterCallback(ProfessionsRecipeSchematicFormMixin.Event.UseBestQualityModified, UpdateWithDefer)
+  hooksecurefunc(self:GetParent(), "statsChangedHandler", UpdateWithDefer)
 
   Auctionator.API.v1.RegisterForDBUpdate(AUCTIONATOR_L_REAGENT_SEARCH, function()
     if self:IsVisible() then
