@@ -170,13 +170,21 @@ local function GetAHProfit(schematicForm)
       schematicForm:GetTransaction():IsApplyingConcentration()
     )
     local qualityOverride = operationInfo and recipeInfo.qualityIDs and recipeInfo.qualityIDs[operationInfo.craftingQuality]
-    local outputData = C_TradeSkillUI.GetRecipeOutputItemData(
-      recipeInfo.recipeID,
-      schematicForm:GetTransaction():CreateCraftingReagentInfoTbl(),
-      schematicForm:GetTransaction():GetAllocationItemGUID(),
-      qualityOverride
-    )
-    local recipeLink = outputData and outputData.hyperlink
+    local qualitiesItemIDs = C_TradeSkillUI.GetRecipeQualityItemIDs(recipeInfo.recipeID)
+    local recipeLink
+    if not qualitiesItemIDs or #qualitiesItemIDs == 1 then
+      local outputData = C_TradeSkillUI.GetRecipeOutputItemData(
+        recipeInfo.recipeID,
+        schematicForm:GetTransaction():CreateCraftingReagentInfoTbl(),
+        schematicForm:GetTransaction():GetAllocationItemGUID(),
+        qualityOverride
+      )
+      recipeLink = outputData and outputData.hyperlink
+    else
+      local qualityIDs = C_TradeSkillUI.GetQualitiesForRecipe(recipeInfo.recipeID)
+      local _
+      _, recipeLink = C_Item.GetItemInfo(qualitiesItemIDs[tIndexOf(qualityIDs, qualityOverride)])
+    end
 
     if recipeLink ~= nil then
       local currentAH = Auctionator.API.v1.GetAuctionPriceByItemLink(AUCTIONATOR_L_REAGENT_SEARCH, recipeLink) or 0
