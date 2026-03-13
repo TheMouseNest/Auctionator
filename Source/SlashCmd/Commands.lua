@@ -123,7 +123,11 @@ function Auctionator.SlashCmd.Config(optionName, value1, ...)
 end
 
 function Auctionator.SlashCmd.Version()
-  Auctionator.Utilities.Message(AUCTIONATOR_L_VERSION_HEADER .. " " .. Auctionator.State.CurrentVersion)
+  Auctionator.Utilities.Message(
+    BLUE_FONT_COLOR:WrapTextInColorCode("Version: ") .. C_AddOns.GetAddOnMetadata("Auctionator", "Version") ..
+    LIGHTGRAY_FONT_COLOR:WrapTextInColorCode(", " .. date() .. ", ") ..
+    BLUE_FONT_COLOR:WrapTextInColorCode("WoW: ") .. select(4, GetBuildInfo())
+  )
 end
 
 function Auctionator.SlashCmd.Help()
