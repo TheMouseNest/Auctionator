@@ -1,5 +1,5 @@
 ---@class addonTableAuctionator
-local _, addonTable = ...
+local addonTable = select(2, ...)
 
 addonTable.Constants = {
   AdvancedSearchDivider = ';',

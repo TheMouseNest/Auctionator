@@ -48,6 +48,12 @@ L["SLASH_SCAN_HELP"] = "Start a full scan."
 L["SLASH_HELP"] = "Open the Auctionator settings."
 L["SLASH_UNKNOWN_COMMAND"] = "Unknown command '%s'"
 
+L["VENDOR"] = "Vendor"
+L["AUCTION"] = "Auction"
+L["AUCTION_AGE"] = "Auction Age"
+L["X_DAYS"] = "%s days"
+L["UNKNOWN"] = "unknown"
+
 --- OLD ---
 
 L["CONFIG_BASIC_OPTIONS_CATEGORY"] = "Basic Options"
