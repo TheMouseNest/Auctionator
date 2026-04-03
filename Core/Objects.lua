@@ -5,6 +5,7 @@ addonTable.Core = {}
 addonTable.Data = {
   Modern = {},
   Legacy = {},
+  Classic = {},
 }
 addonTable.Utilities = {}
 addonTable.Dialogs = {}

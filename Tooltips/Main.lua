@@ -50,9 +50,10 @@ local lines = {
 
 function addonTable.Tooltips.AddLines(tooltip, dbKeys, hyperlinkOrItemID, stackCount)
   local applyStacks = addonTable.Config.Get(addonTable.Config.Options.TOOLTIPS_SHIFT_STACK)
+  stackCount = applyStacks and stackCount or 0
   for _, l in ipairs(lines) do
     if l.use and addonTable.Config.Get(l.option) then
-      l.func(tooltip, dbKeys, hyperlinkOrItemID, applyStacks and stackCount or 0)
+      l.func(tooltip, dbKeys, hyperlinkOrItemID, stackCount)
     end
   end
 end
