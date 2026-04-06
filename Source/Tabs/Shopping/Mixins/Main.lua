@@ -53,6 +53,7 @@ function AuctionatorShoppingTabFrameMixin:OnLoad()
   self.dialogs = {}
 
   self.itemDialog = CreateFrame("Frame", "AuctionatorShoppingTabItemFrame", self, "AuctionatorShoppingItemTemplate")
+  self.itemDialog:ClearAllPoints()
   self.itemDialog:SetPoint("CENTER")
   table.insert(self.dialogs, self.itemDialog)
 
