@@ -38,6 +38,27 @@ local function AddAuctionAgeDetails(tooltip, dbKeys, hyperlinkOrItemID, stackCou
   tooltip:AddDoubleLine(addonTable.Locales.AUCTION_AGE, age and addonTable.Locales.X_DAYS:format(age) or addonTable.Locales.UNKNOWN)
 end
 
+local function AddEnchantDetails(tooltip, dbKeys, hyperlinkOrItemID, stackCount)
+  local price = addonTable.Crafting.Disenchant.GetAuctionPrice(hyperlinkOrItemID)
+  tooltip:AddDoubleLine(addonTable.Locales.DISENCHANT .. CreateCountString(stackCount), price and addonTable.Tooltips.Utilities.CreatePaddedMoneyString(price * math.max(1, stackCount)) or addonTable.Locales.UNKNOWN)
+
+  if IsShiftKeyDown() then
+    for _, line in ipairs(addonTable.Crafting.Disenchant.GetBreakdown(itemLink, {GetItemInfo(hyperlinkOrItemID)})) do
+      tooltip:AddLine(line)
+    end
+  end
+end
+
+local function AddProspectDetails(tooltip, dbKeys, hyperlinkOrItemID, stackCount)
+  local price = addonTable.Crafting.Prospect.GetAuctionPrice(hyperlinkOrItemID)
+  tooltip:AddDoubleLine(addonTable.Locales.PROSPECT .. CreateCountString(stackCount), price and addonTable.Tooltips.Utilities.CreatePaddedMoneyString(price * math.max(1, stackCount)) or addonTable.Locales.UNKNOWN)
+end
+
+local function AddMillDetails(tooltip, dbKeys, hyperlinkOrItemID, stackCount)
+  local price = addonTable.Crafting.Mill.GetAuctionPrice(hyperlinkOrItemID)
+  tooltip:AddDoubleLine(addonTable.Locales.MILL .. CreateCountString(stackCount), price and addonTable.Tooltips.Utilities.CreatePaddedMoneyString(price * math.max(1, stackCount)) or addonTable.Locales.UNKNOWN)
+end
+
 local lines = {
   {option = addonTable.Config.Options.TOOLTIPS_VENDOR, func = AddVendorDetails, use = true},
   {option = addonTable.Config.Options.TOOLTIPS_AUCTION, func = AddAuctionDetails, use = true},

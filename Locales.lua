@@ -53,6 +53,9 @@ L["AUCTION"] = "Auction"
 L["AUCTION_AGE"] = "Auction Age"
 L["X_DAYS"] = "%s days"
 L["UNKNOWN"] = "unknown"
+L["DISENCHANT"] = "Disenchant"
+L["PROSPECT"] = "Prospect"
+L["MILL"] = "Mill"
 
 --- OLD ---
 
@@ -197,8 +200,6 @@ L["CANNOT_AUCTION"] = "Cannot Auction"
 L["X_DAYS"] = "%s days"
 L["UNKNOWN"] = "unknown"
 L["VENDOR"] = "Vendor"
-L["DISENCHANT"] = "Disenchant"
-L["PROSPECT"] = "Prospect"
 L["MILL"] = "Mill"
 L["TOTAL_ITEMS_COLORED"] = "Total |cFFAAAAFF %s items|r"
 

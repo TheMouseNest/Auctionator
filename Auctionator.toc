@@ -35,6 +35,9 @@ Core/Initialize.lua
 Core/SlashCmd.lua
 
 Data/Legacy/Suffixes.lua [AllowLoadGameType vanilla, tbc, wrath]
+Data/Classic/Disenchant.lua [AllowLoadGameType classic]
+Data/Classic/Prospect.lua [AllowLoadGameType classic]
+Data/Classic/Mill.lua [AllowLoadGameType classic]
 
 Skins/Main.lua
 Skins/Blizzard.lua
@@ -49,6 +52,12 @@ Storage/Initialize.lua
 Scanning/Initialize.lua
 Scanning/Modern/Browse.lua
 Scanning/Legacy/QueryAll.lua
+
+Crafting/Disenchant.lua [AllowLoadGameType classic]
+Crafting/Prospect.lua [AllowLoadGameType classic]
+Crafting/Mill.lua [AllowLoadGameType classic]
+
+Tooltips/Main.lua
 
 CustomiseDialog/Main.lua
 CustomiseDialog/Components.lua

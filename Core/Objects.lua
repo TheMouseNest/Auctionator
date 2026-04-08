@@ -30,6 +30,13 @@ addonTable.Wrappers = {
   Legacy = {},
 }
 
+addonTable.Crafting = {
+  -- Classic only
+  Disenchant = {},
+  Prospect = {},
+  Mill = {},
+}
+
 addonTable.API = {}
 
 Auctionator = {
