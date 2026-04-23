@@ -31,7 +31,7 @@ local function InitializeTierDropDown(dropDown)
     end
     do
       table.insert(tierStrings, CreateAtlasMarkup("Professions-Icon-Quality-Tier" .. 3 .. "-Small", 17, 17))
-      table.insert(tierIDs, tostring(tier))
+      table.insert(tierIDs, tostring(3))
     end
   end
 
