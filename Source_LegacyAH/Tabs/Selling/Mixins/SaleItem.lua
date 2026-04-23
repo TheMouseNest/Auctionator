@@ -644,11 +644,6 @@ function AuctionatorSaleItemMixin:GetConfirmationMessage()
     return AUCTIONATOR_L_CONFIRM_POST_PRICE_DROP:format(GetMoneyString(self.UnitPrice:GetAmount(), true))
   end
 
-  -- Check if the item was underpriced compared to the currently on sale items
-  if effectiveUnitPrice < self:GetStackableWarningThreshold() then
-    return AUCTIONATOR_L_CONFIRM_POST_LOW_PRICE:format(GetMoneyString(self.UnitPrice:GetAmount(), true))
-  end
-
   -- Determine if the item is worth more to sell to a vendor than to post on the
   -- AH.
   local itemInfo = { C_Item.GetItemInfo(self.itemInfo.itemLink) }
@@ -657,6 +652,11 @@ function AuctionatorSaleItemMixin:GetConfirmationMessage()
      vendorPrice * self:GetStackSize() * self:GetNumStacks()
        > math.floor(effectiveUnitPrice * self:GetStackSize() * self:GetNumStacks() * Auctionator.Constants.AfterAHCut) then
     return AUCTIONATOR_L_CONFIRM_POST_BELOW_VENDOR
+  end
+
+  -- Check if the item was underpriced compared to the currently on sale items
+  if effectiveUnitPrice < self:GetStackableWarningThreshold() then
+    return AUCTIONATOR_L_CONFIRM_POST_LOW_PRICE:format(GetMoneyString(self.UnitPrice:GetAmount(), true))
   end
 end
 

@@ -639,11 +639,6 @@ function AuctionatorSaleItemMixin:GetConfirmationMessage()
     effectiveUnitPrice = self.BidPrice:GetAmount()
   end
 
-  -- Check if the item was underpriced compared to the currently on sale items
-  if self.priceThreshold ~= nil and self.priceThreshold >= effectiveUnitPrice then
-    return AUCTIONATOR_L_CONFIRM_POST_LOW_PRICE:format(GetMoneyString(effectiveUnitPrice, true))
-  end
-
   -- Determine if the item is worth more to sell to a vendor than to post on the
   -- AH.
   local itemInfo = { C_Item.GetItemInfo(self.itemInfo.itemLink) }
@@ -652,6 +647,11 @@ function AuctionatorSaleItemMixin:GetConfirmationMessage()
      vendorPrice * self.Quantity:GetNumber()
        > math.floor(effectiveUnitPrice * self.Quantity:GetNumber() * Auctionator.Constants.AfterAHCut) then
     return AUCTIONATOR_L_CONFIRM_POST_BELOW_VENDOR
+  end
+
+  -- Check if the item was underpriced compared to the currently on sale items
+  if self.priceThreshold ~= nil and self.priceThreshold >= effectiveUnitPrice then
+    return AUCTIONATOR_L_CONFIRM_POST_LOW_PRICE:format(GetMoneyString(effectiveUnitPrice, true))
   end
 end
 
