@@ -17,6 +17,7 @@ local settings = {
 
   TOOLTIPS_AUCTION_MEAN = {key = "auction_mean_tooltip", default = false},
   AUCTION_MEAN_DAYS_LIMIT = {key = "auction_mean_days_limit", default = 21},
+  TOOLTIPS_PET = {key = "pet_tooltips", default = true},
 
   DEFAULT_TAB = {key = "default_tab", default = 0},
 

@@ -22,6 +22,7 @@
 ## IconTexture: Interface\AddOns\Auctionator\Assets\logo
 
 Libs/LibStub/LibStub.lua
+Libs/LibBattlePetTooltipLine/LibBattlePetTooltipLine.xml
 
 Locales.lua
 

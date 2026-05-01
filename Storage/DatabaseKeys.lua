@@ -25,40 +25,49 @@ function addonTable.Storage.BasicDBKeyFromLink(itemLink)
 end
 
 if addonTable.Constants.IsModernAH then
-  function addonTable.Storage.DBKeyFromLink(itemLink, callback)
+  function addonTable.Storage.DBKeyFromLinkFast(itemLink)
     local basicKey = addonTable.Utilities.BasicDBKeyFromLink(itemLink)
 
     if basicKey == nil then
-      callback({})
-      return
+      return {}
     end
 
     if IsGear(itemLink) then
-      local item = Item:CreateFromItemLink(itemLink)
-      if item:IsItemEmpty() then
-        callback({})
-        return
+      if not C_Item.DoesItemExistByID(itemLink) then
+        return {}
       end
 
-      item:ContinueOnItemLoad(function()
-        local itemLevel = C_Item.GetDetailedItemLevelInfo(itemLink) or 0
-        if itemLevel >= addonTable.Constants.ItemLevelThreshold then
-          callback({"g:" .. basicKey .. ":" .. itemLevel, basicKey})
-        else
-          callback({basicKey})
-        end
-      end)
+      local itemLevel = C_Item.GetDetailedItemLevelInfo(itemLink) or 0
+      if itemLevel >= addonTable.Constants.ItemLevelThreshold then
+        return {"g:" .. basicKey .. ":" .. itemLevel, basicKey}
+      else
+        return {basicKey}
+      end
     else
-      callback({basicKey})
+      return {basicKey}
+    end
+  end
+
+  function addonTable.Storage.DBKeyFromLink(itemLink, callback)
+    local itemID
+    if itemLink then
+      itemID = C_Item.GetItemIDForItemInfo(itemLink)
+    end
+    if not itemID or not C_Item.DoesItemExistByID(itemID) or C_Item.IsItemDataCachedByID(itemLink) then
+      callback(addonTable.Storage.DBKeyFromLinkFast(itemLink))
+    else
+      local item = Item:CreateFromItemID(itemID)
+      item:ContinueOnItemLoad(function()
+        callback(addonTable.Storage.DBKeyFromLinkFast(itemLink))
+      end)
     end
   end
 else
-  function addonTable.Storage.DBKeyFromLink(itemLink, callback)
+  function addonTable.Storage.DBKeyFromLinkFast(itemLink)
     local basicKey = addonTable.Storage.BasicDBKeyFromLink(itemLink)
 
     if basicKey == nil then
-      callback({})
-      return
+      return {}
     end
 
     if IsGear(itemLink) then
@@ -66,13 +75,17 @@ else
       local suffixStringID = addonTable.Data.Legacy.SuffixIDToSuffixStringID[suffix]
       local suffixString = addonTable.Data.Legacy.SuffixStringIDTOSuffixString[suffixStringID]
       if suffixString then
-        callback({"gr:" .. basicKey .. ":" .. suffixString, basicKey})
+        return {"gr:" .. basicKey .. ":" .. suffixString, basicKey}
       else
-        callback({basicKey})
+        return {basicKey}
       end
     else
-      callback({basicKey})
+      return {basicKey}
     end
+  end
+
+  function addonTable.Storage.DBKeyFromLink(itemLink, callback)
+    callback(addonTable.Storage.DBKeyFromLinkFast(itemLink))
   end
 end
 
@@ -80,7 +93,7 @@ function addonTable.Storage.DBKeysFromMultipleLinks(itemLinks, callback)
   local result = {}
 
   for index, link in ipairs(itemLinks) do
-    Auctionator.Utilities.DBKeyFromLink(link, function(dbKeys)
+    addonTable.Storage.DBKeyFromLink(link, function(dbKeys)
       result[index] = dbKeys
 
       for i = 1, #itemLinks do
@@ -93,15 +106,15 @@ function addonTable.Storage.DBKeysFromMultipleLinks(itemLinks, callback)
   end
 end
 
-function addonTable.Storage.Modern.DBKeyFromBrowseResult(result)
-  if result.itemKey.battlePetSpeciesID ~= 0 then
-    return {"p:" .. tostring(result.itemKey.battlePetSpeciesID)}
-  elseif IsGear(result.itemKey.itemID) and result.itemKey.itemLevel >= Auctionator.Constants.ItemLevelThreshold then
+function addonTable.Storage.Modern.DBKeyFromItemKey(itemKey)
+  if itemKey.battlePetSpeciesID ~= 0 then
+    return {"p:" .. tostring(itemKey.battlePetSpeciesID)}
+  elseif IsGear(itemKey.itemID) and itemKey.itemLevel >= addonTable.Constants.ItemLevelThreshold then
     return {
-      "g:" .. result.itemKey.itemID .. ":" .. result.itemKey.itemLevel,
-      tostring(result.itemKey.itemID)
+      "g:" .. itemKey.itemID .. ":" .. itemKey.itemLevel,
+      tostring(itemKey.itemID)
     }
   else
-    return {tostring(result.itemKey.itemID)}
+    return {tostring(itemKey.itemID)}
   end
 end

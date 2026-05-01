@@ -44,7 +44,7 @@ function addonTable.Scanning.Modern.BrowseMixin:OnEvent(event, ...)
   elseif event == "AUCTION_HOUSE_CLOSED" and self.doingFullScan then
     self:UnregisterForEvents()
     self.doingFullScan = false
-    addonTable.Utilities.Message(AUCTIONATOR_L_FULL_SCAN_FAILED_SUMMARY)
+    addonTable.Utilities.Message(addonTable.Locales.FULL_SCAN_FAILED_SUMMARY)
     addonTable.CallbackRegistry:TriggerEvent("ScanFail")
   end
 end
@@ -57,7 +57,7 @@ end
 
 function addonTable.Scanning.Modern.BrowseMixin:InitiateScan()
   if not self.doingFullScan then
-    addonTable.Utilities.Message(AUCTIONATOR_L_STARTING_FULL_SCAN_SUMMARY)
+    addonTable.Utilities.Message(addonTable.Locales.STARTING_FULL_SCAN_SUMMARY)
     self:RegisterForEvents()
     self.state.TimeOfLastFree = time()
     addonTable.Wrappers.Modern.SendBrowseQuery({searchString = "", sorts = {}, filters = {}, itemClassFilters = {}})
@@ -67,7 +67,7 @@ function addonTable.Scanning.Modern.BrowseMixin:InitiateScan()
     addonTable.CallbackRegistry:TriggerEvent("ScanStart")
     self:FireProgressEvent()
   else
-    addonTable.Utilities.Message(AUCTIONATOR_L_FULL_SCAN_IN_PROGRESS)
+    addonTable.Utilities.Message(addonTable.Locales.FULL_SCAN_IN_PROGRESS)
   end
 end
 
@@ -102,7 +102,7 @@ end
 function addonTable.Scanning.Modern.BrowseMixin:AddPrices(results)
   for _, resultInfo in ipairs(results) do
     if resultInfo.totalQuantity ~= 0 then
-      local allDBKeys = addonTable.Storage.Modern.DBKeyFromBrowseResult(resultInfo)
+      local allDBKeys = addonTable.Storage.Modern.DBKeyFromItemKey(resultInfo.itemKey)
 
       for index, dbKey in ipairs(allDBKeys) do
         if self.info[dbKey] == nil then
@@ -131,7 +131,7 @@ function addonTable.Scanning.Modern.BrowseMixin:NextStep()
     self.info = {} --Already processed, so clear
     self.rawScan = {}
 
-    addonTable.Utilities.Message(AUCTIONATOR_L_FINISHED_PROCESSING:format(count))
+    addonTable.Utilities.Message(addonTable.Locales.FINISHED_PROCESSING:format(count))
     self.doingFullScan = false
 
     addonTable.CallbackRegistry:TriggerEvent("ScanComplete", rawScan)

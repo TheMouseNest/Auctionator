@@ -4,7 +4,7 @@ local addonTable = select(2, ...)
 addonTable.Constants = {
   AdvancedSearchDivider = ';',
 
-  PetCageID = 82800,
+  BattlePetCageID = 82800,
   WoWTokenID = 122270,
 
   ScanDay0 = time({year=2020, month=1, day=1, hour=0}),
@@ -105,7 +105,6 @@ if addonTable.Constants.IsLegacyAH then
 end
 
 if addonTable.Constants.IsRetail then
-
   addonTable.Constants.SellingBagIconSize = 42
   addonTable.Constants.ItemLevelThreshold = 168
   addonTable.Constants.QualityIDs = {
@@ -132,8 +131,8 @@ if addonTable.Constants.IsRetail then
     Enum.ItemClass.Questitem,
     Enum.ItemClass.Miscellaneous,
   }
-else
 
+else
   addonTable.Constants.SellingBagIconSize = 35
   addonTable.Constants.ItemLevelThreshold = 0
   addonTable.Constants.QualityIDs = {
