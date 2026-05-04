@@ -1,7 +1,7 @@
 ---@class addonTableAuctionator
 local addonTable = select(2, ...)
 
-local function GetItemName(itemID)
+local function GetDisenchantItemName(itemID)
   local itemName = C_Item.GetItemInfo(itemID)
 
   return itemName or Auctionator.Constants.DisenchantingItemName[itemID]
@@ -53,20 +53,20 @@ end
 local function GetDisenchantPrice(classID, itemRarity, itemLevel)
   if IsDisenchantableItemType(classID) and IsNotCommon(itemRarity) then
 
-    local dePrice = 0
+    local totalPrice = 0
 
-    local ta = GetEntry(classID, itemRarity, itemLevel)
-    if ta then
-      for x = 3, #ta, 3 do
-        local price = GetItemPrice(ta[x + 2])
+    local details = GetEntry(classID, itemRarity, itemLevel)
+    if details then
+      for x = 3, #details, 3 do
+        local price = GetItemPrice(details[x + 2])
 
         if price then
-          dePrice = dePrice + (ta[x] * ta[x + 1] * price)
+          totalPrice = totalPrice + (details[x] * details[x + 1] * price)
         end
       end
     end
 
-    return math.floor(dePrice / 100)
+    return math.floor(totalPrice / 100)
   end
 
   return nil
@@ -87,10 +87,10 @@ function addonTable.Crafting.Disenchant.GetBreakdown(itemLink, itemInfo)
   if entry then
     for x = 3, #entry, 3 do
       local percent = math.floor(entry[x] * 100) / 100
-      local deitem = GetItemName(entry[x + 2])
+      local itemName = GetDisenchantItemName(entry[x + 2])
 
       if (percent > 0) then
-        table.insert(results, "  " .. WHITE_FONT_COLOR:WrapTextInColorCode(percent .. "%") .. " " .. entry[x + 1] .. " " .. (deitem or '???'))
+        table.insert(results, "  " .. WHITE_FONT_COLOR:WrapTextInColorCode(percent .. "%") .. " " .. entry[x + 1] .. " " .. (itemName or '???'))
       end
     end
   end

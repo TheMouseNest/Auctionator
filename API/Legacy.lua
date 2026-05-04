@@ -1,9 +1,19 @@
 ---@class addonTableAuctionator
 local addonTable = select(2, ...)
 
-function Auctionator.API.GetAuctionPriceByItemID(itemID)
+function addonTable.API.ComposeError(callerID, message)
+  error(
+    "Contact the maintainer of " .. callerID ..
+    " to resolve this problem. Details: " .. message
+  )
+end
+
+function Auctionator.API.v1.GetAuctionPriceByItemID(callerID, itemID)
   if type(itemID) ~= "number" then
-    error("Usage Auctionator.API.GetAuctionPriceByItemID(string, number)")
+    addonTable.API.ComposeError(
+      callerID,
+      "Usage Auctionator.API.v1.GetAuctionPriceByItemID(string, number)"
+    )
   end
 
   if addonTable.PriceDatabase == nil then
@@ -13,15 +23,20 @@ function Auctionator.API.GetAuctionPriceByItemID(itemID)
   return addonTable.PriceDatabase:GetPrice(tostring(itemID))
 end
 
-function Auctionator.API.GetAuctionPriceByItemLink(itemLink)
+function Auctionator.API.v1.GetAuctionPriceByItemLink(callerID, itemLink)
   if type(itemLink) ~= "string" then
-    error("Usage Auctionator.API.GetAuctionPriceByItemLink(string, string)")
+    addonTable.API.ComposeError(
+      callerID,
+      "Usage Auctionator.API.v1.GetAuctionPriceByItemLink(string, string)"
+    )
   end
 
   if addonTable.PriceDatabase == nil then
     return nil
   end
 
+  -- Use that the callback is called immediately (and populates dbKeys) if the
+  -- item info for item levels is available now.
   local dbKeys = addonTable.Storage.DBKeyFromLinkFast(itemLink)
 
   if dbKeys then
@@ -36,9 +51,12 @@ end
 -- Returns the number of days since the item was seen in the auction house,
 -- except if the number of days exceeds 21, then it returns nil. It will return
 -- nil if there is no auction ever seen in the auction house for the item.
-function Auctionator.API.GetAuctionAgeByItemID(itemID)
+function Auctionator.API.v1.GetAuctionAgeByItemID(callerID, itemID)
   if type(itemID) ~= "number" then
-    error("Usage Auctionator.API.GetAuctionAgeByItemID(string, number)")
+    addonTable.API.ComposeError(
+      callerID,
+      "Usage Auctionator.API.v1.GetAuctionAgeByItemID(string, number)"
+    )
   end
 
   if addonTable.PriceDatabase == nil then
@@ -48,9 +66,12 @@ function Auctionator.API.GetAuctionAgeByItemID(itemID)
   return addonTable.PriceDatabase:GetPriceAge(tostring(itemID))
 end
 
-function Auctionator.API.IsAuctionDataExactByItemID(itemID)
+function Auctionator.API.v1.IsAuctionDataExactByItemID(callerID, itemID)
   if type(itemID) ~= "number" then
-    error("Usage Auctionator.API.IsAuctionDataExactByItemID(string, number)")
+    addonTable.API.ComposeError(
+      callerID,
+      "Usage Auctionator.API.v1.IsAuctionDataExactByItemID(string, number)"
+    )
   end
 
   if addonTable.PriceDatabase == nil then
@@ -60,11 +81,11 @@ function Auctionator.API.IsAuctionDataExactByItemID(itemID)
   return addonTable.PriceDatabase:GetPrice(tostring(itemID)) ~= nil
 end
 
-function Auctionator.API.IsAuctionDataExactByItemLink(itemLink)
+function Auctionator.API.v1.IsAuctionDataExactByItemLink(callerID, itemLink)
   if type(itemLink) ~= "string" then
     addonTable.API.ComposeError(
       callerID,
-      "Usage Auctionator.API.IsAuctionDataExactByItemLink(string, string)"
+      "Usage Auctionator.API.v1.IsAuctionDataExactByItemLink(string, string)"
     )
   end
 
@@ -92,9 +113,12 @@ function Auctionator.API.IsAuctionDataExactByItemLink(itemLink)
   end
 end
 
-function Auctionator.API.GetAuctionAgeByItemLink(itemLink)
+function Auctionator.API.v1.GetAuctionAgeByItemLink(callerID, itemLink)
   if type(itemLink) ~= "string" then
-    error("Usage Auctionator.API.GetAuctionAgeByItemLink(string, string)")
+    addonTable.API.ComposeError(
+      callerID,
+      "Usage Auctionator.API.v1.GetAuctionAgeByItemLink(string, string)"
+    )
   end
 
   if addonTable.PriceDatabase == nil then
@@ -121,49 +145,66 @@ function Auctionator.API.GetAuctionAgeByItemLink(itemLink)
   end
 end
 
-function Auctionator.API.GetDisenchantPriceByItemID(itemID)
+function Auctionator.API.v1.GetDisenchantPriceByItemID(callerID, itemID)
   if type(itemID) ~= "number" then
-    error("Usage Auctionator.API.GetAuctionPriceByItemID(string, number)")
+    addonTable.API.ComposeError(
+      callerID,
+      "Usage Auctionator.API.v1.GetAuctionPriceByItemID(string, number)"
+    )
   end
 
   local itemInfo = { C_Item.GetItemInfo(itemID) }
   local itemLink = itemInfo[2]
 
   if itemLink ~= nil then
-    return addonTable.Crafting.Disenchant.GetAuctionPrice(itemLink, itemInfo)
+    return addonTable.Enchant.GetDisenchantAuctionPrice(itemLink, itemInfo)
   else
     return nil
   end
 end
 
-function Auctionator.API.GetDisenchantPriceByItemLink(itemLink)
+function Auctionator.API.v1.GetDisenchantPriceByItemLink(callerID, itemLink)
   if type(itemLink) ~= "string" then
-    error("Usage Auctionator.API.GetAuctionPriceByItemLink(string, string)")
+    addonTable.API.ComposeError(
+      callerID,
+      "Usage Auctionator.API.v1.GetAuctionPriceByItemLink(string, string)"
+    )
   end
 
   local itemInfo = { C_Item.GetItemInfo(itemLink) }
 
   if #itemInfo > 0 then
-    return addonTable.Crafting.Disenchant.GetAuctionPrice(itemLink, itemInfo)
+    return addonTable.Enchant.GetDisenchantAuctionPrice(itemLink, itemInfo)
   else
     return nil
   end
 end
 
-function Auctionator.API.GetVendorPriceByItemID(itemID)
+function Auctionator.API.v1.GetVendorPriceByItemID(callerID, itemID)
   if type(itemID) ~= "number" then
-    error("Usage Auctionator.API.GetVendorPriceByItemID(string, number)")
+    addonTable.API.ComposeError(
+      callerID,
+      "Usage Auctionator.API.v1.GetVendorPriceByItemID(string, number)"
+    )
   end
 
   return AUCTIONATOR_VENDOR_PRICE_CACHE[tostring(itemID)]
 end
 
-function Auctionator.API.GetVendorPriceByItemLink(itemLink)
+function Auctionator.API.v1.GetVendorPriceByItemLink(callerID, itemLink)
   if type(itemLink) ~= "string" then
-    error("Usage Auctionator.API.GetVendorPriceByItemLink(string, string)")
+    addonTable.API.ComposeError(
+      callerID,
+      "Usage Auctionator.API.v1.GetVendorPriceByItemLink(string, string)"
+    )
   end
 
-  local dbKeys = addonTable.Storage.DBKeyFromLinkFast(itemLink)
+  local dbKeys = nil
+  -- Use that the callback is called immediately (and populates dbKeys) if the
+  -- item info for item levels is available now.
+  addonTable.Storage.DBKeyFromLink(itemLink, function(dbKeysCallback)
+    dbKeys = dbKeysCallback
+  end)
 
   if dbKeys then
     for _, key in ipairs(dbKeys) do
@@ -176,9 +217,12 @@ function Auctionator.API.GetVendorPriceByItemLink(itemLink)
   end
 end
 
-function Auctionator.API.RegisterForDBUpdate(callback)
+function Auctionator.API.v1.RegisterForDBUpdate(callerID, callback)
   if type(callback) ~= "function" then
-    error("Usage Auctionator.API.RegisterForDBUpdate(string, function)")
+    addonTable.API.ComposeError(
+      callerID,
+      "Usage Auctionator.API.v1.RegisterForDBUpdate(string, function)"
+    )
   end
 
   addonTable.CallbackRegistry:RegisterCallback("ScanComplete", function()

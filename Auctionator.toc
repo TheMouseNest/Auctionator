@@ -80,3 +80,4 @@ Wrappers/Legacy/Initialize.lua
 Wrappers/Initialize.lua
 
 API/Main.lua
+API/Legacy.lua
