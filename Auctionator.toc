@@ -29,6 +29,7 @@ Libs\Manifest.xml
 Libs_ModernAH\Manifest.xml [AllowLoadGameType cata, mists, mainline]
 
 Patches\TaintLess.xml [AllowLoadGameType vanilla, tbc, wrath]
+Patches\Blacklist.lua
 
 Locales\Manifest.xml
 

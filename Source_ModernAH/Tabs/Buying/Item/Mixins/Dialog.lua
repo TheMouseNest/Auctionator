@@ -11,10 +11,15 @@ function AuctionatorBuyItemDialogMixin:Reset()
   self.price = nil
 end
 
-function AuctionatorBuyItemDialogMixin:ReceiveEvent(eventName, rowData)
+function AuctionatorBuyItemDialogMixin:ReceiveEvent(eventName, rowData, skipConfirmation)
   self.PurchaseDetails:SetText(AUCTIONATOR_L_PAYING_X:format(GetMoneyString(rowData.price, true)))
   self.price = rowData.price
   self.auctionID = rowData.auctionID
+
+  if skipConfirmation then
+    self:BuyClicked()
+    return
+  end
 
   if rowData.itemLink:match("battlepet") then
     local speciesID, _, breedQuality = BattlePetToolTip_UnpackBattlePetLink(rowData.itemLink)

@@ -210,7 +210,7 @@ function AuctionatorBuyCommodityFrameTemplateMixin:UpdateView()
     self.DetailsContainer.BuyButton:Disable()
   end
 end
-function AuctionatorBuyCommodityFrameTemplateMixin:BuyClicked()
+function AuctionatorBuyCommodityFrameTemplateMixin:BuyClicked(button)
   local minUnitPrice = self.results[1].price
   local maxUnitPrice = self.results[1].price
   for _, r in ipairs(self.results) do
@@ -220,7 +220,11 @@ function AuctionatorBuyCommodityFrameTemplateMixin:BuyClicked()
     maxUnitPrice = r.price
   end
   local shift = (maxUnitPrice - minUnitPrice) / minUnitPrice * 100
-  if shift >= 50 then
+  local shortcut = Auctionator.Config.Get(Auctionator.Config.Options.SHOPPING_SKIP_BUY_CONFIRMATION)
+  local skipConfirm = shortcut ~= Auctionator.Config.Shortcuts.NONE and
+    Auctionator.Utilities.IsShortcutActive(shortcut, button or "LeftButton")
+  self.skipConfirmation = skipConfirm
+  if not skipConfirm and shift >= 50 then
     self.WidePriceRangeWarningDialog:SetDetails({
       minUnitPrice = minUnitPrice,
       maxUnitPrice = maxUnitPrice,
@@ -249,6 +253,13 @@ local function GetMedianUnit(quantity, results)
 end
 
 function AuctionatorBuyCommodityFrameTemplateMixin:CheckPurchase(newUnitPrice, newTotalPrice)
+  if self.skipConfirmation then
+    C_AuctionHouse.ConfirmCommoditiesPurchase(self.expectedItemID, self.selectedQuantity)
+    FrameUtil.UnregisterFrameForEvents(self, PURCHASE_EVENTS)
+    self.waitingForPurchase = false
+    return
+  end
+
   local originalUnitPrice = self:GetPrices()
 
   local prefix = ""

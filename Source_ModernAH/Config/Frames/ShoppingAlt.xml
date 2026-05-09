@@ -16,6 +16,18 @@
           <Anchor point="TOPLEFT" relativeKey="$parent.ListMissingTerms" relativePoint="BOTTOMLEFT" />
         </Anchors>
       </Frame>
+      <Frame inherits="AuctionatorDropDown" parentKey="SkipBuyConfirmationShortcut">
+        <KeyValues>
+          <KeyValue key="labelText" value="AUCTIONATOR_L_CONFIG_SHOPPING_SKIP_BUY_CONFIRMATION" type="global" />
+          <KeyValue key="tooltipTitleText" value="AUCTIONATOR_L_CONFIG_SHOPPING_SKIP_BUY_CONFIRMATION_TOOLTIP_HEADER" type="global" />
+          <KeyValue key="tooltipText" value="AUCTIONATOR_L_CONFIG_SHOPPING_SKIP_BUY_CONFIRMATION_TOOLTIP_TEXT" type="global"/>
+          <KeyValue key="textString" value="LEFT_CLICK;RIGHT_CLICK;ALT_LEFT_CLICK;ALT_RIGHT_CLICK;SHIFT_LEFT_CLICK;SHIFT_RIGHT_CLICK;DISABLED" type="string"/>
+          <KeyValue key="valuesString" value="left click;right click;alt left click;alt right click;shift left click;shift right click;none" type="string"/>
+        </KeyValues>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.AlwaysConfirmQuantity" relativePoint="BOTTOMLEFT" />
+        </Anchors>
+      </Frame>
    </Frames>
   </Frame>
 </Ui>
