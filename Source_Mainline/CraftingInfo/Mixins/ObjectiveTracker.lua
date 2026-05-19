@@ -6,7 +6,7 @@ function AuctionatorCraftingInfoObjectiveTrackerFrameMixin:OnLoad()
     "PLAYER_INTERACTION_MANAGER_FRAME_HIDE",
     "TRACKED_RECIPE_UPDATE",
   })
-  self:UpdateSearchButton()
+  self:ShowIfRelevant()
 
   local function Update()
     self:ShowIfRelevant()
@@ -32,7 +32,7 @@ function AuctionatorCraftingInfoObjectiveTrackerFrameMixin:UpdateSearchButton()
 end
 
 function AuctionatorCraftingInfoObjectiveTrackerFrameMixin:IsAnythingTracked()
-  return #C_TradeSkillUI.GetRecipesTracked(true) > 0 or #C_TradeSkillUI.GetRecipesTracked(false) > 0 
+  return #C_TradeSkillUI.GetRecipesTracked(true) > 0 or #C_TradeSkillUI.GetRecipesTracked(false) > 0
 end
 
 function AuctionatorCraftingInfoObjectiveTrackerFrameMixin:SearchButtonClicked()
